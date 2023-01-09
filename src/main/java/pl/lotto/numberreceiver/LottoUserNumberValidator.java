@@ -1,21 +1,21 @@
 package pl.lotto.numberreceiver;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
-import static pl.minigames.lotto.LottoRules.NUMBER_OF_NUMBERS;
-import static pl.minigames.lotto.ValidationError.DUPLICATED_NUMBER;
-import static pl.minigames.lotto.ValidationError.OUT_OF_BOUND;
+
+import static pl.lotto.numberreceiver.ValidationError.DUPLICATED_NUMBER;
+import static pl.lotto.numberreceiver.ValidationError.OUT_OF_BOUND;
 
 class LottoUserNumberValidator {
-    //    private final static int NUMBER_OF_NUMBERS = LottoRules.NUMBER_OF_NUMBERS;
-    private final static int MAX_NUMBER = LottoRules.MAX_NUMBER;
+    private final static int NUMBER_OF_NUMBERS = 6;
+    private final static int MAX_NUMBER = 99;
 
     LottoUserNumberValidator() {
     }
 
-    ValidationResult validate(Set<Integer> userNumbers) {
+    ValidationResult validate(Collection<Integer> userNumbers) {
         List<ValidationError> errors = new ArrayList<>();
         if (userNumbers.size() < NUMBER_OF_NUMBERS) {
             errors.add(DUPLICATED_NUMBER);
@@ -37,28 +37,4 @@ class LottoUserNumberValidator {
     private boolean numberIsInRange(int toCheck) {
         return (toCheck >= 1 && toCheck <= MAX_NUMBER);
     }
-
-    //    LottoUserNumberValidator(NumberReaderProvider userNumberReader) {
-//        this.userNumberReader = userNumberReader;
-
-//    }
-//    Set<Integer> validateEnteredNumbers() {
-//        validateIfInputContainsEnoughElements(toValidate);
-//        validateIfAllNumbersAreInRange(toValidate);
-//        return toValidate;
-
-//    }
-//    private void validateIfInputContainsEnoughElements(Set<Integer> toValidate) {
-//        int count = toValidate.size();
-//        if (count < NUMBER_OF_NUMBERS)
-////            throw new IllegalArgumentException("You need to enter " + NUMBER_OF_NUMBERS + " unique numbers");
-
-//    }
-//    private void validateIfAllNumbersAreInRange(Set<Integer> toValidate) {
-//        boolean allMatch = toValidate.stream().allMatch(this::numberIsInRange);
-//        if (!allMatch)
-////            throw new IllegalArgumentException("Numbers out of bound have been given, please try again");
-
-//    }
-
 }

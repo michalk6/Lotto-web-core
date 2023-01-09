@@ -11,7 +11,7 @@ public class NumberReceiverFacadeTest {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade();
         // when
-        String result = numberReceiverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6));
+        String result = numberReceiverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6)).message();
         // then
         assertThat(result).isEqualTo("success");
     }
