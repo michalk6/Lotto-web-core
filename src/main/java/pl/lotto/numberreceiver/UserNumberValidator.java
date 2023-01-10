@@ -6,24 +6,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-class LottoUserNumberValidator {
+class UserNumberValidator {
     private final static int NUMBER_OF_NUMBERS = LottoRules.NUMBER_OF_NUMBERS;
     private final static int MAX_NUMBER = LottoRules.MAX_NUMBER;
 
-    LottoUserNumberValidator() {
+    UserNumberValidator() {
     }
 
     ValidationResult validate(Collection<Integer> userNumbers) {
         List<ValidationError> errors = new ArrayList<>();
         boolean isValid = false;
-        if (!enoughNumbersGiven(userNumbers)) {
-            errors.add(ValidationError.NOT_ENOUGH_NUMBERS);
+        if (!properAmountOfNumbersGiven(userNumbers)) {
+            errors.add(ValidationError.WRONG_AMOUNT_OF_NUMBERS);
         }
         if (!allInBound(userNumbers)) {
-            errors.add(ValidationError.OUT_OF_BOUND);
+            errors.add(ValidationError.NUMBERS_OUT_OF_BOUND);
         }
         if (!uniqueNumbers(userNumbers)) {
-            errors.add(ValidationError.DUPLICATED_NUMBER);
+            errors.add(ValidationError.DUPLICATED_NUMBERS);
         }
         if (errors.isEmpty()) {
             isValid = true;
@@ -31,7 +31,7 @@ class LottoUserNumberValidator {
         return new ValidationResult(isValid, errors);
     }
 
-    private static boolean enoughNumbersGiven(Collection<Integer> userNumbers) {
+    private static boolean properAmountOfNumbersGiven(Collection<Integer> userNumbers) {
         return userNumbers.size() == NUMBER_OF_NUMBERS;
     }
 
@@ -45,7 +45,7 @@ class LottoUserNumberValidator {
     }
 
     private boolean uniqueNumbers(Collection<Integer> userNumbers) {
-        long count = userNumbers.stream().distinct().count();
-        return count == NUMBER_OF_NUMBERS;
+        long distinct = userNumbers.stream().distinct().count();
+        return distinct == userNumbers.size();
     }
 }
