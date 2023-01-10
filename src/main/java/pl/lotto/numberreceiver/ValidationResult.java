@@ -1,4 +1,6 @@
 package pl.lotto.numberreceiver;
 
-public record ValidationResult(boolean isValid, String message) {
+import java.util.List;
+
+public record ValidationResult(boolean isValid, List<ValidationError> errors) {
 }
