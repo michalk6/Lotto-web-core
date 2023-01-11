@@ -1,8 +1,6 @@
 package pl.lotto.numberreceiver;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class NumberReceiverFacade {
 
@@ -17,8 +15,9 @@ public class NumberReceiverFacade {
     public InputNumbersDto inputNumbers(Collection<Integer> userNumbers) {
         ValidationResult result = validator.validate(userNumbers);
         if (!result.isValid()) {
-            return new InputNumbersDto(result.errorMessage(), null, null);
+            return new InputNumbersDto(result.errorMessage(), null, null, null);
         }
-        return new InputNumbersDto(List.of("success"), scheduler.nextDrawDate(), UUID.randomUUID().toString());
+        Set<Integer> validatedNumbers = new HashSet<>(userNumbers);
+        return new InputNumbersDto(List.of("success"), scheduler.nextDrawDate(), UUID.randomUUID().toString(), validatedNumbers);
     }
 }

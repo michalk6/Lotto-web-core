@@ -2,6 +2,8 @@ package pl.lotto.numberreceiver;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Set;
 
@@ -37,13 +39,26 @@ public class NumberReceiverFacadeTest {
     }
 
     @Test
-    public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEnteredWrongAmountOfNumbers() {
+    public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEnteredToMuchNumbers() {
         // given
         UserNumberValidator validator = new UserNumberValidator();
         NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1,2,3,4,5)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 6, 7)).messages();
+        System.out.println(messages);
+        // then
+        assertThat(messages).isEqualTo(List.of("Wrong amount of numbers have been given"));
+    }
+
+    @Test
+    public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEnteredNotEnoughNumbers() {
+        // given
+        UserNumberValidator validator = new UserNumberValidator();
+        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
+        // when
+        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5)).messages();
         System.out.println(messages);
         // then
         assertThat(messages).isEqualTo(List.of("Wrong amount of numbers have been given"));
@@ -56,7 +71,7 @@ public class NumberReceiverFacadeTest {
         NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1000, 1, 2,3,4,5)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1000, 1, 2, 3, 4, 5)).messages();
         System.out.println(messages);
         // then
         assertThat(messages).isEqualTo(List.of("Numbers out of bound have been given"));
@@ -69,9 +84,22 @@ public class NumberReceiverFacadeTest {
         NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 2,3,4,5)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 2, 3, 4, 5)).messages();
         System.out.println(messages);
         // then
         assertThat(messages).isEqualTo(List.of("Duplicated numbers have been given"));
+    }
+
+    @Test
+    public void inputNumbers_shouldReturnNextSaturdayDrawDate_whenUserDrawnNumbers() {
+        // given
+        UserNumberValidator validator = new UserNumberValidator();
+        NextDrawScheduler drawScheduler = new NextDrawScheduler();
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, drawScheduler);
+        // when
+        LocalDateTime nextDrawDate = numberReceiverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6)).drawDate();
+        // then
+        LocalDateTime expectedDateTime = LocalDateTime.of(2023, Month.JANUARY, 14, 12, 0);
+        assertThat(nextDrawDate).isEqualTo(expectedDateTime);
     }
 }

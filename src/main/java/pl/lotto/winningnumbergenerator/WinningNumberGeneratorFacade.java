@@ -1,6 +1,6 @@
 package pl.lotto.winningnumbergenerator;
 
-import java.util.Collection;
+import java.util.Set;
 
 public class WinningNumberGeneratorFacade {
     private final WinningNumberGenerator winningNumberGenerator;
@@ -9,7 +9,7 @@ public class WinningNumberGeneratorFacade {
         this.winningNumberGenerator = winningNumberGenerator;
     }
 
-    public Collection<Integer> drawWinningNumbers() {
+    public Set<Integer> drawWinningNumbers() {
         return winningNumberGenerator.drawWinningNumbers();
     }
 }
