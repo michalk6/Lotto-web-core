@@ -11,13 +11,12 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NumberReceiverFacadeTest {
+    LocalDateTime now = LocalDateTime.now();
 
     @Test
     public void inputNumbers_shouldReturnSuccessMessage_andDrawDate_andLotteryId_whenUserEnteredSixCorrectNumbers() {
         // given
-        UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now);
         // when
         List<String> result = numberReceiverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6)).messages();
         // then
@@ -27,9 +26,7 @@ public class NumberReceiverFacadeTest {
     @Test
     public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsEveryErrorMessage_whenUserEnteredNumbersOutOfBound_andDuplicatedNumbers_andWrongAmountOfNumbers() {
         // given
-        UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 1000)).messages();
         System.out.println(messages);
@@ -42,9 +39,7 @@ public class NumberReceiverFacadeTest {
     @Test
     public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEnteredToMuchNumbers() {
         // given
-        UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 6, 7)).messages();
         System.out.println(messages);
@@ -55,9 +50,7 @@ public class NumberReceiverFacadeTest {
     @Test
     public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEnteredNotEnoughNumbers() {
         // given
-        UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5)).messages();
         System.out.println(messages);
@@ -68,9 +61,7 @@ public class NumberReceiverFacadeTest {
     @Test
     public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyNumbersOutOfBoundMessage_whenUserEnteredNumbersOutOfBound() {
         // given
-        UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1000, 1, 2, 3, 4, 5)).messages();
         System.out.println(messages);
@@ -81,9 +72,7 @@ public class NumberReceiverFacadeTest {
     @Test
     public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyDuplicatedNumbersMessage_whenUserEnteredDuplicatedNumbers() {
         // given
-        UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler();
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, nextDrawScheduler);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 2, 3, 4, 5)).messages();
         System.out.println(messages);
@@ -95,13 +84,24 @@ public class NumberReceiverFacadeTest {
     @DisplayName("should return next saturday draw date when user played on friday")
     public void inputNumbers_shouldReturnNextSaturdayDrawDate_whenUserPlayedOnFriday() {
         // given
-        UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler drawScheduler = new NextDrawScheduler();
-        NumberReceiverFacade numberReceiverFacade = new NumberReceiverFacade(validator, drawScheduler);
+        LocalDateTime friday = LocalDateTime.of(2023, Month.JANUARY, 12, 11, 0);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(friday);
         // when
-        LocalDateTime nextDrawDate = numberReceiverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6)).drawDate();
+        LocalDateTime nextDrawDate = numberReceiverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6)).ticket().drawDate();
         // then
         LocalDateTime expectedDateTime = LocalDateTime.of(2023, Month.JANUARY, 14, 12, 0);
         assertThat(nextDrawDate).isEqualTo(expectedDateTime);
+    }
+
+    @Test
+    public void retrieveNumbersForNextDrawDate_shouldReturnListOfAllTicketsForNextDraw_whenIsFriday() {
+        // given
+        LocalDateTime friday = LocalDateTime.of(2023, Month.JANUARY, 12, 11, 0);
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(friday);
+        numberReceiverFacade.inputNumbers()
+        //when
+        AllNumbersDto allNumbersDto = numberReceiverFacade.retrieveNumbersForNextDrawDate();
+        //then
+        assertThat(allNumbersDto).isEqualTo(new AllNumbersDto(List.of(new TicketDto(friday, "1", Set.of(1, 2, 3, 4, 5, 6)))));
     }
 }
