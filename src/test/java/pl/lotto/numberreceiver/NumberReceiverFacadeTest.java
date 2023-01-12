@@ -1,5 +1,6 @@
 package pl.lotto.numberreceiver;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -91,7 +92,8 @@ public class NumberReceiverFacadeTest {
     }
 
     @Test
-    public void inputNumbers_shouldReturnNextSaturdayDrawDate_whenUserDrawnNumbers() {
+    @DisplayName("should return next saturday draw date when user played on friday")
+    public void inputNumbers_shouldReturnNextSaturdayDrawDate_whenUserPlayedOnFriday() {
         // given
         UserNumberValidator validator = new UserNumberValidator();
         NextDrawScheduler drawScheduler = new NextDrawScheduler();

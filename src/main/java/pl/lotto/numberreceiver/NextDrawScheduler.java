@@ -5,10 +5,14 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 
 class NextDrawScheduler {
+    LocalDateTime today;
+
+    NextDrawScheduler(LocalDateTime today) {
+        this.today = today;
+    }
 
     LocalDateTime nextDrawDate() {
-        return LocalDateTime
-                .now()
+        return today
                 .with(TemporalAdjusters.next(DayOfWeek.SATURDAY))
                 .withHour(12)
                 .withMinute(0)

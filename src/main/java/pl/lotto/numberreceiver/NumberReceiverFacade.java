@@ -6,6 +6,7 @@ public class NumberReceiverFacade {
 
     private final UserNumberValidator validator;
     private final NextDrawScheduler scheduler;
+    private final Map<String, TicketDto> databaseInMemory = new ConcurrentHashMap<>();
 
     public NumberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler) {
         this.validator = validator;
