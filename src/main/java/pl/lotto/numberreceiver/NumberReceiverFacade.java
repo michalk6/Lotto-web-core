@@ -1,19 +1,18 @@
 package pl.lotto.numberreceiver;
 
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class NumberReceiverFacade {
 
     private final UserNumberValidator validator;
     private final NextDrawScheduler scheduler;
-    private final Map<String, TicketDto> databaseInMemory = new ConcurrentHashMap<>();
+    private final TicketRepository repository;
 
-    public NumberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler) {
+    public NumberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler, TicketRepository repository) {
         this.validator = validator;
         this.scheduler = scheduler;
+        this.repository = repository;
     }
 
     public InputNumbersDto inputNumbers(Collection<Integer> userNumbers) {
@@ -22,16 +21,20 @@ public class NumberReceiverFacade {
             return new InputNumbersDto(result.errorMessage(), null);
         }
         Set<Integer> validatedNumbers = new HashSet<>(userNumbers);
-        TicketDto ticket = new TicketDto(scheduler.nextDrawDate(), UUID.randomUUID().toString(), validatedNumbers);
-        // save to database
-//        databaseInMemory.put()
+        TicketDto ticket = new TicketDto(getNextDrawDate(), UUID.randomUUID().toString(), validatedNumbers);
+        repository.save(ticket);
         return new InputNumbersDto(List.of("success"), ticket);
     }
 
     public AllNumbersDto retrieveNumbersForNextDrawDate() {
-        // read from database
-//        databaseInMemory.values().stream()
-        LocalDateTime friday = LocalDateTime.of(2023, Month.JANUARY, 12, 11, 0);
-        return new AllNumbersDto(List.of(new TicketDto(friday, "1", Set.of(1, 2, 3, 4, 5, 6))));
+        List<TicketDto> ticketsForNextDrawDate = repository.findAll().stream()
+                .filter(ticket -> ticket.drawDate().equals(getNextDrawDate()))
+                .toList();
+        return new AllNumbersDto(ticketsForNextDrawDate);
     }
+
+    private LocalDateTime getNextDrawDate() {
+        return scheduler.nextDrawDate();
+    }
+
 }

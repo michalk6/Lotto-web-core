@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 public class NumberReceiverConfiguration {
 
-    public NumberReceiverFacade createForTest(LocalDateTime now) {
+    public NumberReceiverFacade createForTest(LocalDateTime testDateTime, TicketRepository repository) {
         UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler(now);
-        return new NumberReceiverFacade(validator, nextDrawScheduler);
+        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler(testDateTime);
+        return new NumberReceiverFacade(validator, nextDrawScheduler, repository);
     }
 }
