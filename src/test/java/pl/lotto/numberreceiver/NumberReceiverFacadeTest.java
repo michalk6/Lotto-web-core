@@ -5,13 +5,14 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NumberReceiverFacadeTest {
-    TicketRepository repository = new NumberReceiverRepositoryInMemory();
+    NumberReceiverRepository repository = new NumberReceiverRepositoryInMemory();
     LocalDateTime now = LocalDateTime.now();
 
     @Test
@@ -30,7 +31,6 @@ public class NumberReceiverFacadeTest {
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now, repository);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 1000)).messages();
-        System.out.println(messages);
         // then
         assertThat(messages).contains("Wrong amount of numbers have been given");
         assertThat(messages).contains("Numbers out of bound have been given");
@@ -43,7 +43,6 @@ public class NumberReceiverFacadeTest {
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now, repository);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 6, 7)).messages();
-        System.out.println(messages);
         // then
         assertThat(messages).isEqualTo(List.of("Wrong amount of numbers have been given"));
     }
@@ -54,7 +53,6 @@ public class NumberReceiverFacadeTest {
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now, repository);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5)).messages();
-        System.out.println(messages);
         // then
         assertThat(messages).isEqualTo(List.of("Wrong amount of numbers have been given"));
     }
@@ -65,7 +63,6 @@ public class NumberReceiverFacadeTest {
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now, repository);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1000, 1, 2, 3, 4, 5)).messages();
-        System.out.println(messages);
         // then
         assertThat(messages).isEqualTo(List.of("Numbers out of bound have been given"));
     }
@@ -76,7 +73,6 @@ public class NumberReceiverFacadeTest {
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(now, repository);
         // when
         List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 2, 3, 4, 5)).messages();
-        System.out.println(messages);
         // then
         assertThat(messages).isEqualTo(List.of("Duplicated numbers have been given"));
     }
@@ -100,25 +96,22 @@ public class NumberReceiverFacadeTest {
         LocalDateTime friday = LocalDateTime.of(2023, Month.JANUARY, 12, 11, 0);
         LocalDateTime expectedDrawDate = LocalDateTime.of(2023, Month.JANUARY, 14, 12, 0);
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(friday, repository);
+        NumberReceiverFacade numberReceiverFacade2 = new NumberReceiverConfiguration().createForTest(friday.plusDays(1), repository);
+        NumberReceiverFacade numberReceiverFacade3 = new NumberReceiverConfiguration().createForTest(friday.plusDays(2), repository);
         InputNumbersDto inputNumbersDto1 = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 7));
-        InputNumbersDto inputNumbersDto2 = numberReceiverFacade.inputNumbers(List.of(1, 3, 11, 14, 15, 17));
-        InputNumbersDto inputNumbersDto3 = numberReceiverFacade.inputNumbers(List.of(11, 22, 33, 44, 55, 76));
-        InputNumbersDto inputNumbersDto4 = numberReceiverFacade.inputNumbers(List.of(1, 33, 12, 11, 5, 7));
+        InputNumbersDto inputNumbersDto2 = numberReceiverFacade.inputNumbers(List.of(11, 22, 33, 44, 55, 76));
+        InputNumbersDto inputNumbersDto3 = numberReceiverFacade2.inputNumbers(List.of(1, 33, 12, 11, 5, 99));
+        InputNumbersDto inputNumbersDto4 = numberReceiverFacade3.inputNumbers(List.of(1, 33, 12, 11, 5, 99));
         //when
-        AllNumbersDto allNumbersDto = numberReceiverFacade.retrieveNumbersForNextDrawDate();
+        AllNumbersDto allNumbersDto = numberReceiverFacade.retrieveNumbersForCurrentDrawDate();
         //then
-        List<String> strings = repository.findAll()
-                .stream()
-                .map(TicketDto::lotteryId)
-                .toList();
-        repository.findAll()
-                .forEach(System.out::println);
         AllNumbersDto expected = new AllNumbersDto(List.of(
                 (inputNumbersDto1.ticket()),
                 (inputNumbersDto2.ticket()),
-                (inputNumbersDto3.ticket()),
-                (inputNumbersDto4.ticket())
+                (inputNumbersDto3.ticket())
         ));
-        assertThat(allNumbersDto).isEqualTo(expected);
+        Set<TicketDto> allNumbersDtoSet = new HashSet<>(allNumbersDto.tickets());
+        Set<TicketDto> expectedSet = new HashSet<>(expected.tickets());
+        assertThat(allNumbersDtoSet).isEqualTo(expectedSet);
     }
 }

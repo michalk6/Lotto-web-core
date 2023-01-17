@@ -7,9 +7,9 @@ public class NumberReceiverFacade {
 
     private final UserNumberValidator validator;
     private final NextDrawScheduler scheduler;
-    private final TicketRepository repository;
+    private final NumberReceiverRepository repository;
 
-    public NumberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler, TicketRepository repository) {
+    public NumberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler, NumberReceiverRepository repository) {
         this.validator = validator;
         this.scheduler = scheduler;
         this.repository = repository;
@@ -26,7 +26,7 @@ public class NumberReceiverFacade {
         return new InputNumbersDto(List.of("success"), ticket);
     }
 
-    public AllNumbersDto retrieveNumbersForNextDrawDate() {
+    public AllNumbersDto retrieveNumbersForCurrentDrawDate() {
         List<TicketDto> ticketsForNextDrawDate = repository.findAll().stream()
                 .filter(ticket -> ticket.drawDate().equals(getNextDrawDate()))
                 .toList();
