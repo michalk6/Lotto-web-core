@@ -1,6 +1,6 @@
 package pl.lotto.resultchecker;
 
-import pl.lotto.numberreceiver.TicketDto;
+import pl.lotto.numberreceiver.dto.TicketDto;
 
 public record CheckedTicketDto(boolean isWon, TicketDto ticket) {
     boolean checkById(String givenId) {

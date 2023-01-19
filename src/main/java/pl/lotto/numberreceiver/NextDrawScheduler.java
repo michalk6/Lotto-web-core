@@ -1,18 +1,19 @@
 package pl.lotto.numberreceiver;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 
 class NextDrawScheduler {
-    LocalDateTime today;
+    Clock clock;
 
-    NextDrawScheduler(LocalDateTime today) {
-        this.today = today;
+    NextDrawScheduler(Clock clock) {
+        this.clock = clock;
     }
 
     LocalDateTime nextDrawDate() {
-        return today
+        return LocalDateTime.now(clock)
                 .with(TemporalAdjusters.next(DayOfWeek.SATURDAY))
                 .withHour(12)
                 .withMinute(0)
