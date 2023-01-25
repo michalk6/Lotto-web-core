@@ -1,5 +1,7 @@
 package pl.lotto.winningnumbergenerator;
 
+import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 

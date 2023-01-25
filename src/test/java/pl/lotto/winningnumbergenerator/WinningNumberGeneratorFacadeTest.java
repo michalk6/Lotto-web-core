@@ -11,7 +11,7 @@ class WinningNumberGeneratorFacadeTest {
     public void drawWinningNumbers_shouldReturnCollectionOfSixUniqueNumbers() {
         // given
         WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
-        WinningNumbersRepositoryForTest repository = new WinningNumbersRepositoryForTest();
+        WinningNumbersRepositoryInMemory repository = new WinningNumbersRepositoryInMemory();
         WinningNumberGeneratorFacade winningNumberGeneratorFacade = new WinningNumberGeneratorFacade(winningNumberGenerator, repository);
         // when
         Set<Integer> numbersDrawn = winningNumberGeneratorFacade.drawWinningNumbers().numbers();

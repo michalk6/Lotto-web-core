@@ -6,7 +6,7 @@ import pl.lotto.numberreceiver.dto.TicketDto;
 import pl.lotto.resultchecker.dto.AllCheckedTicketsDto;
 import pl.lotto.resultchecker.dto.CheckedTicketDto;
 import pl.lotto.winningnumbergenerator.WinningNumberGeneratorFacade;
-import pl.lotto.winningnumbergenerator.WinningNumbersDto;
+import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
 
 import java.util.List;
 import java.util.Set;
