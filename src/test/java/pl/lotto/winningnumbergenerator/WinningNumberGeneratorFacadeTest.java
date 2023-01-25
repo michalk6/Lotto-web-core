@@ -11,9 +11,10 @@ class WinningNumberGeneratorFacadeTest {
     public void drawWinningNumbers_shouldReturnCollectionOfSixUniqueNumbers() {
         // given
         WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
-        WinningNumberGeneratorFacade winningNumberGeneratorFacade = new WinningNumberGeneratorFacade(winningNumberGenerator);
+        WinningNumbersRepositoryForTest repository = new WinningNumbersRepositoryForTest();
+        WinningNumberGeneratorFacade winningNumberGeneratorFacade = new WinningNumberGeneratorFacade(winningNumberGenerator, repository);
         // when
-        Set<Integer> numbersDrawn = winningNumberGeneratorFacade.drawWinningNumbers();
+        Set<Integer> numbersDrawn = winningNumberGeneratorFacade.drawWinningNumbers().numbers();
         // then
         assertThat(numbersDrawn.size()).isEqualTo(6);
     }

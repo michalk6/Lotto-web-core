@@ -3,7 +3,7 @@ package pl.lotto.resultchecker;
 import java.util.List;
 
 interface ResultCheckerRepository {
-    CheckedTicketDto save(CheckedTicketDto ticket);
+    CheckedTicket save(CheckedTicket ticket);
 
-    List<CheckedTicketDto> findAll();
+    List<CheckedTicket> findAll();
 }

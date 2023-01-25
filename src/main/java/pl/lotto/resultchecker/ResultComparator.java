@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.Set;
 
 class ResultComparator {
-    private TicketChecker ticketChecker;
+    private final TicketChecker ticketChecker;
 
     public ResultComparator(TicketChecker ticketChecker) {
         this.ticketChecker = ticketChecker;
     }
-    AllCheckedTicketsDto checkTicketOfTheLastDraw(Set<Integer> winningNumbers, List<TicketDto> toCheck) {
-        return new AllCheckedTicketsDto(toCheck.stream()
-                .map(ticket -> ticketChecker.checkIfTicketIsWon(winningNumbers, ticket))
-                .toList());
+    List<CheckedTicket> checkTicketForSingleDraw(Set<Integer> winningNumbers, List<TicketDto> toCheck) {
+        return toCheck.stream()
+                .map(ticket -> ticketChecker.checkTicket(winningNumbers, ticket))
+                .toList();
     }
 }

@@ -1,7 +1,6 @@
 package pl.lotto.numberreceiver;
 
 import java.time.Clock;
-import java.time.LocalDateTime;
 
 public class NumberReceiverConfiguration {
 
