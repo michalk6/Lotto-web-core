@@ -1,5 +1,9 @@
 package pl.lotto.numberreceiver;
 
+import pl.lotto.numberreceiver.dto.AllNumbersDto;
+import pl.lotto.numberreceiver.dto.InputNumbersDto;
+import pl.lotto.numberreceiver.dto.TicketDto;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -21,16 +25,15 @@ public class NumberReceiverFacade {
             return new InputNumbersDto(result.errorMessage(), null);
         }
         Set<Integer> validatedNumbers = new HashSet<>(userNumbers);
-        TicketDto ticket = new TicketDto(getNextDrawDate(), UUID.randomUUID().toString(), validatedNumbers);
-        repository.save(ticket);
-        return new InputNumbersDto(List.of("success"), ticket);
+        Ticket ticket = new Ticket(UUID.randomUUID().toString(), getNextDrawDate(), validatedNumbers);
+        Ticket saved = repository.save(ticket);
+        return new InputNumbersDto(List.of("success"), TicketMapper.mapToDto(saved));
     }
 
     public AllNumbersDto retrieveNumbersForCurrentDrawDate() {
-        List<TicketDto> ticketsForNextDrawDate = repository.findAll().stream()
-                .filter(ticket -> ticket.drawDate().equals(getNextDrawDate()))
-                .toList();
-        return new AllNumbersDto(ticketsForNextDrawDate);
+        List<Ticket> allByDrawDate = repository.findAllByDrawDate(scheduler.nextDrawDate());
+        List<TicketDto> ticketDtos = TicketMapper.mapListToDto(allByDrawDate);
+        return new AllNumbersDto(ticketDtos);
     }
 
     private LocalDateTime getNextDrawDate() {

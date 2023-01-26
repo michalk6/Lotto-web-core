@@ -1,4 +1,4 @@
-package pl.lotto.resultchecker;
+package pl.lotto.resultchecker.dto;
 
 import java.util.List;
 
