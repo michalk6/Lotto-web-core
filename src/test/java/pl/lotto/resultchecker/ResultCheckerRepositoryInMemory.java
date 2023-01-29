@@ -1,7 +1,7 @@
 package pl.lotto.resultchecker;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ResultCheckerRepositoryInMemory implements ResultCheckerRepository {
@@ -9,11 +9,15 @@ public class ResultCheckerRepositoryInMemory implements ResultCheckerRepository 
 
     @Override
     public CheckedTicket save(CheckedTicket ticket) {
-        return null;
+        databaseInMemory.put(ticket.getLotteryId(), ticket);
+        return ticket;
     }
 
     @Override
-    public List<CheckedTicket> findAll() {
-        return databaseInMemory.values().stream().toList();
+    public Optional<CheckedTicket> findCheckedTicketByLotteryId(String lotteryId) {
+        return databaseInMemory.values()
+                .stream()
+                .filter(ticket -> ticket.getLotteryId().equals(lotteryId))
+                .findFirst();
     }
 }
