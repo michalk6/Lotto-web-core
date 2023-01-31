@@ -3,6 +3,7 @@ package pl.lotto.numberreceiver;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NumberReceiverRepositoryInMemory implements NumberReceiverRepository {
@@ -19,5 +20,12 @@ public class NumberReceiverRepositoryInMemory implements NumberReceiverRepositor
         return databaseInMemory.values().stream()
                 .filter(ticket -> ticket.getDrawDate().equals(drawDate))
                 .toList();
+    }
+
+    @Override
+    public Optional<Ticket> findTicketByLotteryId(String lotteryId) {
+        return databaseInMemory.values().stream()
+                .filter(ticket -> ticket.getLotteryId().equals(lotteryId))
+                .findFirst();
     }
 }

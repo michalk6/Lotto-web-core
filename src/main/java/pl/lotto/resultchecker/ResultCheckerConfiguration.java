@@ -8,7 +8,7 @@ public class ResultCheckerConfiguration {
             WinningNumberGeneratorFacade winningNumberGeneratorMock,
             NumberReceiverFacade numberReceiverMock,
             ResultCheckerRepository repository) {
-        TicketChecker ticketChecker = new TicketChecker(repository);
+        TicketChecker ticketChecker = new TicketChecker();
         ResultComparator resultComparator = new ResultComparator(ticketChecker);
         return new ResultCheckerFacade(winningNumberGeneratorMock, numberReceiverMock, resultComparator, repository);
     }

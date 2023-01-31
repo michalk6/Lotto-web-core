@@ -25,18 +25,11 @@ public class ResultCheckerFacade {
     }
 
 
-    public CheckedTicketDto checkWinner(String lotteryId) {
-        return repository.findAll().stream()
-                .map(CheckedTicketMapper::mapToDto)
-                .filter(checkedTicketDto -> checkedTicketDto.checkById(lotteryId))
-                .findFirst()
-                .get(); //todo need to fix optional issue here
-    }
-
     public AllCheckedTicketsDto checkAllTicketsForCurrentDrawDate() {
         Set<Integer> winningNumbers = retrieveWinningNumbersForCurrentDrawDate().numbers();
-        List<TicketDto> tickets = retrieveNumbersForCurrentDrawDate().tickets();
+        List<Ticket> tickets = TicketMapper.mapToTicketList(retrieveNumbersForCurrentDrawDate().tickets());
         List<CheckedTicket> checkedTickets = comparator.checkTicketForSingleDraw(winningNumbers, tickets);
+        checkedTickets.forEach(repository::save);
         List<CheckedTicketDto> checkedTicketDtos = CheckedTicketMapper.mapListToDto(checkedTickets);
         return new AllCheckedTicketsDto(checkedTicketDtos);
     }
@@ -47,5 +40,20 @@ public class ResultCheckerFacade {
 
     private WinningNumbersDto retrieveWinningNumbersForCurrentDrawDate() {
         return numberGenerator.drawWinningNumbers();
+    }
+
+    public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawDateException {
+        CheckedTicket ticket = repository.findCheckedTicketByLotteryId(lotteryId)
+                .orElse(findFromNumberReceiver(lotteryId));
+        if (ticket.getResult() == null) {
+            throw new NoSuchDrawDateException("The draw has not yet taken place");
+        }
+        return CheckedTicketMapper.mapToDto(ticket);
+    }
+
+    private CheckedTicket findFromNumberReceiver(String lotteryId) {
+        TicketDto byLotteryId = numberReceiver.findByLotteryId(lotteryId);
+        Ticket ticket = TicketMapper.mapToTicket(byLotteryId);
+        return new CheckedTicket(ticket.getLotteryId(), ticket.getDrawDate(), ticket.getUserNumbers(), null);
     }
 }

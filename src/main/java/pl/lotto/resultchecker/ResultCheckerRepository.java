@@ -1,9 +1,9 @@
 package pl.lotto.resultchecker;
 
-import java.util.List;
+import java.util.Optional;
 
 interface ResultCheckerRepository {
     CheckedTicket save(CheckedTicket ticket);
 
-    List<CheckedTicket> findAll();
+    Optional<CheckedTicket> findCheckedTicketByLotteryId(String lotteryId);
 }

@@ -1,32 +1,22 @@
 package pl.lotto.resultchecker;
 
-import pl.lotto.numberreceiver.dto.TicketDto;
-
+import java.util.HashSet;
 import java.util.Set;
 
 class TicketChecker {
-    private final ResultCheckerRepository repository;
 
-    TicketChecker(ResultCheckerRepository repository) {
-        this.repository = repository;
+    TicketChecker() {
     }
 
-    CheckedTicket checkTicket(Set<Integer> winningNumbers, TicketDto toCheck) {
-        Set<Integer> userNumbers = toCheck.userNumbers();
+    CheckedTicket checkTicket(Set<Integer> winningNumbers, Ticket toCheck) {
+        Set<Integer> userNumbers = toCheck.getUserNumbers();
         int numberOfMatches = numberOfMatches(winningNumbers, userNumbers);
-        return repository.save(new CheckedTicket(toCheck.lotteryId(), toCheck.drawDate(), toCheck.userNumbers(), new GameResult(numberOfMatches)));
+        return new CheckedTicket(toCheck.getLotteryId(), toCheck.getDrawDate(), toCheck.getUserNumbers(), new GameResult(numberOfMatches));
     }
 
     private int numberOfMatches(Set<Integer> winningNumbers, Set<Integer> userNumbers) {
-        int result = 0;
-        for (int userNumber : userNumbers) {
-            if (numberMatch(winningNumbers, userNumber))
-                result++;
-        }
-        return result;
-    }
-
-    private boolean numberMatch(Set<Integer> winningNumbers, int userNumber) {
-        return winningNumbers.stream().anyMatch(generated -> generated.equals(userNumber));
+        HashSet<Integer> matchingNumbers = new HashSet<>(userNumbers);
+        matchingNumbers.retainAll(winningNumbers);
+        return matchingNumbers.size();
     }
 }
