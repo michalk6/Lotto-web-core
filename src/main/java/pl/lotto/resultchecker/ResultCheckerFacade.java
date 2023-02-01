@@ -44,7 +44,7 @@ public class ResultCheckerFacade {
 
     public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawDateException {
         CheckedTicket ticket = repository.findCheckedTicketByLotteryId(lotteryId)
-                .orElse(findFromNumberReceiver(lotteryId));
+                .orElseGet(() -> findFromNumberReceiver(lotteryId));
         if (ticket.getResult() == null) {
             throw new NoSuchDrawDateException("The draw has not yet taken place");
         }
