@@ -6,6 +6,7 @@ import pl.lotto.numberreceiver.NumberReceiverFacade;
 import pl.lotto.numberreceiver.NumberReceiverRepositoryInMemory;
 import pl.lotto.numberreceiver.dto.AllNumbersDto;
 import pl.lotto.numberreceiver.dto.TicketDto;
+import pl.lotto.resultchecker.dto.AllCheckedTicketsDto;
 import pl.lotto.resultchecker.dto.CheckedTicketDto;
 import pl.lotto.winningnumbergenerator.WinningNumberGeneratorFacade;
 import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
@@ -73,5 +74,32 @@ class ResultCheckerFacadeTest {
         //then
         assertThatThrownBy(() -> resultCheckerFacade.checkWinner("otherId")).isInstanceOf(NoSuchTicketException.class);
         assertThatThrownBy(() -> resultCheckerFacade.checkWinner("otherId")).hasMessage("Ticket with given id not found");
+    }
+
+    @Test
+    void checkAllTicketsForCurrentDrawDate_shouldReturnCheckedTicketsFromCurrentDrawWithProperGameResult() {
+        //given
+        NumberReceiverFacade numberReceiverMock = mock(NumberReceiverFacade.class);
+        WinningNumberGeneratorFacade winningNumberGeneratorMock = mock(WinningNumberGeneratorFacade.class);
+        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberGeneratorMock, numberReceiverMock, repository);
+        LocalDateTime now = LocalDateTime.now();
+        when(numberReceiverMock.retrieveNumbersForCurrentDrawDate()).thenReturn(
+                new AllNumbersDto(List.of(
+                        new TicketDto(now, "example", Set.of(1, 2, 3, 4, 5, 6)),
+                        new TicketDto(now, "example1", Set.of(2, 3, 4, 5, 6, 7)),
+                        new TicketDto(now, "example2", Set.of(3, 4, 5, 6, 7, 8))
+                ))
+        );
+        when(winningNumberGeneratorMock.drawWinningNumbers()).thenReturn(
+                new WinningNumbersDto(Set.of(1, 2, 3, 4, 5, 6), now)
+        );
+        //when
+        AllCheckedTicketsDto allCheckedTicketsDto = resultCheckerFacade.checkAllTicketsForCurrentDrawDate();
+        //then
+        assertThat(allCheckedTicketsDto.checkedTickets()).containsExactlyInAnyOrder(
+                new CheckedTicketDto(now, "example", Set.of(1, 2, 3, 4, 5, 6), new GameResult(6)),
+                new CheckedTicketDto(now, "example1", Set.of(2, 3, 4, 5, 6, 7), new GameResult(5)),
+                new CheckedTicketDto(now, "example2", Set.of(3, 4, 5, 6, 7, 8), new GameResult(4))
+        );
     }
 }
