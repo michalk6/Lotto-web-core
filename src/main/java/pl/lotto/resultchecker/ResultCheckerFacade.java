@@ -42,11 +42,11 @@ public class ResultCheckerFacade {
         return numberGenerator.drawWinningNumbers();
     }
 
-    public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawDateException {
+    public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawException {
         CheckedTicket ticket = repository.findCheckedTicketByLotteryId(lotteryId)
                 .orElseGet(() -> findFromNumberReceiver(lotteryId));
         if (ticket.getResult() == null) {
-            throw new NoSuchDrawDateException("The draw has not yet taken place");
+            throw new NoSuchDrawException("The draw has not yet taken place");
         }
         return CheckedTicketMapper.mapToDto(ticket);
     }
