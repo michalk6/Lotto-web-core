@@ -1,8 +1,11 @@
 package pl.lotto.numberreceiver;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Document
 class Ticket {
     private String lotteryId;
     private LocalDateTime drawDate;

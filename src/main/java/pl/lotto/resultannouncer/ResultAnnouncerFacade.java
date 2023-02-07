@@ -1,5 +1,7 @@
 package pl.lotto.resultannouncer;
 
+import pl.lotto.numberreceiver.NoSuchTicketException;
+import pl.lotto.resultchecker.NoSuchDrawException;
 import pl.lotto.resultchecker.ResultCheckerFacade;
 import pl.lotto.resultchecker.dto.CheckedTicketDto;
 
@@ -10,7 +12,12 @@ public class ResultAnnouncerFacade {
         this.resultChecker = resultChecker;
     }
 
-    public CheckedTicketDto checkWinner(String lotteryId) {
-        return resultChecker.checkWinner(lotteryId);
+    public ResultDto checkWinner(String lotteryId) {
+        try {
+            CheckedTicketDto checkedTicketDto = resultChecker.checkWinner(lotteryId);
+            return new ResultDto(String.valueOf(checkedTicketDto.result().numberOfMatches()));
+        } catch (NoSuchDrawException | NoSuchTicketException e) {
+            return new ResultDto(e.getMessage());
+        }
     }
 }
