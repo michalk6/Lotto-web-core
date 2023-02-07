@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 public class NumberReceiverFacadeTest {
     NumberReceiverRepository repository = new NumberReceiverRepositoryInMemory();
@@ -109,5 +110,26 @@ public class NumberReceiverFacadeTest {
         AllNumbersDto allNumbersDto = numberReceiverFacade.retrieveNumbersForCurrentDrawDate();
         //then
         assertThat(allNumbersDto.tickets()).containsExactlyInAnyOrder(inputNumbersDto3.ticket(), inputNumbersDto4.ticket());
+    }
+
+    @Test
+    void findByLotteryId_shouldReturnMatchingTicketDto_whenMethodIsCalledWithExistentId() {
+        //given
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
+        InputNumbersDto inputNumbersDto = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 6));
+        String generatedId = inputNumbersDto.ticket().lotteryId();
+        //when
+        //then
+        assertThat(numberReceiverFacade.findByLotteryId(generatedId)).isEqualTo(inputNumbersDto.ticket());
+    }
+
+    @Test
+    void findByLotteryId_shouldThrowNoSuchTicketException_whenMethodIsCalledWithNonexistentId() {
+        //given
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
+        //when
+        //then
+        assertThatThrownBy(() -> numberReceiverFacade.findByLotteryId("nonexistent")).isInstanceOf(NoSuchTicketException.class);
+        assertThatThrownBy(() -> numberReceiverFacade.findByLotteryId("nonexistent")).hasMessage("Ticket with given id not found");
     }
 }

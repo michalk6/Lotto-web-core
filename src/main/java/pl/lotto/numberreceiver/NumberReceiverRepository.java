@@ -1,10 +1,14 @@
 package pl.lotto.numberreceiver;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-interface NumberReceiverRepository {
+@Repository
+interface NumberReceiverRepository extends MongoRepository {
 
     Ticket save(Ticket ticket);
 

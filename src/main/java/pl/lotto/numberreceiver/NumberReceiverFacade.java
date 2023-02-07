@@ -40,7 +40,7 @@ public class NumberReceiverFacade {
         return scheduler.nextDrawDate();
     }
 
-    public TicketDto findByLotteryId(String lotteryId) throws NoSuchTicketException {
+    public TicketDto findByLotteryId(String lotteryId) {
         Ticket ticket = repository.findTicketByLotteryId(lotteryId)
                 .orElseThrow(() -> new NoSuchTicketException("Ticket with given id not found"));
         return TicketMapper.mapToDto(ticket);
