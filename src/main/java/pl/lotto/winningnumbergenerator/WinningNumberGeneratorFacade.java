@@ -1,10 +1,12 @@
 package pl.lotto.winningnumbergenerator;
 
+import org.springframework.stereotype.Component;
 import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Component
 public class WinningNumberGeneratorFacade {
     private final WinningNumberProvider winningNumberGenerator;
     private final WinningNumbersRepository repository;

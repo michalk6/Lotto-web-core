@@ -15,12 +15,22 @@ public class NumberReceiverConfiguration {
     }
 
     @Bean
+    public NumberReceiverFacade numberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler, NumberReceiverRepository repository) {
+        return new NumberReceiverFacade(validator, scheduler, repository);
+    }
+
+    @Bean
     Clock clock() {
         return Clock.systemUTC();
     }
 
 //    @Bean
-//    public NumberReceiverFacade numberReceiverFacade(Clock clock, NumberReceiverRepository repository) {
-//        return new NumberReceiverFacade()
+//    NextDrawScheduler scheduler() {
+//        return new NextDrawScheduler(clock());
+//    }
+
+//    @Bean
+//    UserNumberValidator validator() {
+//        return new UserNumberValidator();
 //    }
 }

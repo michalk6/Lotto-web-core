@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 class CheckedTicketMapper {
 
-
     public static List<CheckedTicketDto> mapListToDto(List<CheckedTicket> tickets) {
         return tickets.stream()
                 .map(CheckedTicketMapper::mapToDto)

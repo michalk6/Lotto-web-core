@@ -1,8 +1,13 @@
 package pl.lotto.winningnumbergenerator;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
-interface WinningNumbersRepository {
+@Repository
+interface WinningNumbersRepository extends MongoRepository<WinningNumbers, LocalDateTime> {
     WinningNumbers save(WinningNumbers winningNumbers);
 
     List<WinningNumbers> findAll();

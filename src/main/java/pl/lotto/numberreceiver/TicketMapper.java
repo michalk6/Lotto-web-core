@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 class TicketMapper {
 
-
     public static List<TicketDto> mapListToDto(List<Ticket> tickets) {
         return tickets.stream()
                 .map(TicketMapper::mapToDto)

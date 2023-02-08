@@ -1,11 +1,13 @@
 package pl.lotto.winningnumbergenerator;
 
+import org.springframework.stereotype.Component;
 import pl.lotto.gamerules.LottoRules;
 
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
+@Component
 class WinningNumberGenerator implements WinningNumberProvider {
     private static final int NUMBER_OF_NUMBERS = LottoRules.NUMBER_OF_NUMBERS;
     private static final int MAX_NUMBER = LottoRules.MAX_NUMBER;

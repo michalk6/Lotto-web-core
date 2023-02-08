@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-interface NumberReceiverRepository extends MongoRepository {
+interface NumberReceiverRepository extends MongoRepository<Ticket, String> {
 
     Ticket save(Ticket ticket);
 
