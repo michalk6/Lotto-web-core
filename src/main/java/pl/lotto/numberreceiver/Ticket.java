@@ -1,14 +1,14 @@
 package pl.lotto.numberreceiver;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Document
 class Ticket {
-    @MongoId
+    @Id
     private String lotteryId;
     private LocalDateTime drawDate;
     private Set<Integer> userNumbers;

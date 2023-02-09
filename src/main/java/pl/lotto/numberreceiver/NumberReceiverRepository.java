@@ -10,8 +10,6 @@ import java.util.Optional;
 @Repository
 interface NumberReceiverRepository extends MongoRepository<Ticket, String> {
 
-    Ticket save(Ticket ticket);
-
     List<Ticket> findAllByDrawDate(LocalDateTime drawDate);
 
     Optional<Ticket> findTicketByLotteryId(String lotteryId);

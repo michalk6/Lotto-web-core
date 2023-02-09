@@ -1,5 +1,6 @@
 package pl.lotto.winningnumbergenerator;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -9,7 +10,7 @@ import java.util.Set;
 @Document
 class WinningNumbers {
     private Set<Integer> numbers;
-    @MongoId
+    @Id
     private LocalDateTime drawDate;
 
     WinningNumbers(Set<Integer> numbers, LocalDateTime drawDate) {
