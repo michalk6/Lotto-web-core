@@ -10,10 +10,10 @@ import java.util.*;
 public class NumberReceiverFacade {
 
     private final UserNumberValidator validator;
-    private final NextDrawScheduler scheduler;
+    private final NextDrawDateGenerator scheduler;
     private final NumberReceiverRepository repository;
 
-    public NumberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler, NumberReceiverRepository repository) {
+    public NumberReceiverFacade(UserNumberValidator validator, NextDrawDateGenerator scheduler, NumberReceiverRepository repository) {
         this.validator = validator;
         this.scheduler = scheduler;
         this.repository = repository;

@@ -10,27 +10,17 @@ public class NumberReceiverConfiguration {
 
     public NumberReceiverFacade createForTest(Clock clock, NumberReceiverRepository repository) {
         UserNumberValidator validator = new UserNumberValidator();
-        NextDrawScheduler nextDrawScheduler = new NextDrawScheduler(clock);
+        NextDrawDateGenerator nextDrawScheduler = new NextDrawDateGenerator(clock);
         return new NumberReceiverFacade(validator, nextDrawScheduler, repository);
     }
 
     @Bean
-    public NumberReceiverFacade numberReceiverFacade(UserNumberValidator validator, NextDrawScheduler scheduler, NumberReceiverRepository repository) {
-        return new NumberReceiverFacade(validator, scheduler, repository);
+    public NumberReceiverFacade numberReceiverFacade(NumberReceiverRepository repository, Clock clock) {
+        return new NumberReceiverFacade(new UserNumberValidator(), new NextDrawDateGenerator(clock), repository);
     }
 
     @Bean
     Clock clock() {
         return Clock.systemUTC();
     }
-
-//    @Bean
-//    NextDrawScheduler scheduler() {
-//        return new NextDrawScheduler(clock());
-//    }
-
-//    @Bean
-//    UserNumberValidator validator() {
-//        return new UserNumberValidator();
-//    }
 }

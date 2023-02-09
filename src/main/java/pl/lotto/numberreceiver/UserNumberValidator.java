@@ -1,13 +1,11 @@
 package pl.lotto.numberreceiver;
 
-import org.springframework.stereotype.Component;
 import pl.lotto.gamerules.LottoRules;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Component
 class UserNumberValidator {
     private final static int NUMBER_OF_NUMBERS = LottoRules.NUMBER_OF_NUMBERS;
     private final static int MAX_NUMBER = LottoRules.MAX_NUMBER;
