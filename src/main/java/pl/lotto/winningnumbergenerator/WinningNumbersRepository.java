@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 interface WinningNumbersRepository extends MongoRepository<WinningNumbers, LocalDateTime> {
-    WinningNumbers save(WinningNumbers winningNumbers);
 
     List<WinningNumbers> findAll();
 }

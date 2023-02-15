@@ -17,9 +17,9 @@ public class WinningNumbersRepositoryInMemory implements WinningNumbersRepositor
     Map<String, WinningNumbers> databaseInMemory = new ConcurrentHashMap<>();
 
     @Override
-    public WinningNumbers save(WinningNumbers winningNumbers) {
-        databaseInMemory.put(winningNumbers.toString(), winningNumbers);
-        return winningNumbers;
+    public <S extends WinningNumbers> S save(S entity) {
+        databaseInMemory.put(entity.toString(), entity);
+        return entity;
     }
 
     @Override

@@ -13,12 +13,12 @@ import static org.mockito.Mockito.when;
 
 class ResultAnnouncerFacadeTest {
     @Test
-    void checkWinner_shouldReturnCheckTicketDto_whenUserGivesExistingId() {
+    void checkWinner_shouldReturnMessage_whenUserGivesExistingId() {
         //given
         ResultCheckerFacade resultCheckerFacadeMock = mock(ResultCheckerFacade.class);
         ResultAnnouncerFacade resultAnnouncer = new ResultAnnouncerFacade(resultCheckerFacadeMock);
         when(resultCheckerFacadeMock.checkWinner("lotteryId")).thenReturn(new CheckedTicketDto(null, "lotteryId", Set.of(1, 2, 3, 4, 5, 6), new GameResult(6)));
         //then
-        assertThat(resultAnnouncer.checkWinner("lotteryId")).isEqualTo(new CheckedTicketDto(null, "lotteryId", Set.of(1, 2, 3, 4, 5, 6), new GameResult(6)));
+        assertThat(resultAnnouncer.checkWinner("lotteryId")).isEqualTo(new ResultDto("6"));
     }
 }

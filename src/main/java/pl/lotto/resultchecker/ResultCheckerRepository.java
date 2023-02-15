@@ -8,7 +8,5 @@ import java.util.Optional;
 @Repository
 interface ResultCheckerRepository extends MongoRepository<CheckedTicket, String> {
 
-    CheckedTicket save(CheckedTicket ticket);
-
     Optional<CheckedTicket> findCheckedTicketByLotteryId(String lotteryId);
 }

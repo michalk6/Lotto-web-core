@@ -17,9 +17,9 @@ public class NumberReceiverRepositoryInMemory implements NumberReceiverRepositor
     Map<String, Ticket> databaseInMemory = new ConcurrentHashMap<>();
 
     @Override
-    public Ticket save(Ticket ticket) {
-        databaseInMemory.put(ticket.getLotteryId(), ticket);
-        return ticket;
+    public <S extends Ticket> S save(S entity) {
+        databaseInMemory.put(entity.getLotteryId(), entity);
+        return entity;
     }
 
     @Override

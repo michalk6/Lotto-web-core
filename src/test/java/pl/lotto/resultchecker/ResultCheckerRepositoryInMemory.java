@@ -16,9 +16,9 @@ public class ResultCheckerRepositoryInMemory implements ResultCheckerRepository 
     Map<String, CheckedTicket> databaseInMemory = new ConcurrentHashMap<>();
 
     @Override
-    public CheckedTicket save(CheckedTicket ticket) {
-        databaseInMemory.put(ticket.getLotteryId(), ticket);
-        return ticket;
+    public <S extends CheckedTicket> S save(S entity) {
+        databaseInMemory.put(entity.getLotteryId(), entity);
+        return entity;
     }
 
     @Override
