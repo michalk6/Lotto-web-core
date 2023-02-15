@@ -2,6 +2,7 @@ package pl.lotto.numberreceiver;
 
 import pl.lotto.numberreceiver.dto.AllNumbersDto;
 import pl.lotto.numberreceiver.dto.InputNumbersDto;
+import pl.lotto.numberreceiver.dto.InputNumbersRequestDto;
 import pl.lotto.numberreceiver.dto.TicketDto;
 
 import java.time.LocalDateTime;
@@ -19,13 +20,15 @@ public class NumberReceiverFacade {
         this.repository = repository;
     }
 
-    public InputNumbersDto inputNumbers(Collection<Integer> userNumbers) {
+    public InputNumbersDto inputNumbers(InputNumbersRequestDto request) {
+        Collection<Integer> userNumbers = RequestMapper.mapRequestDtoToCollection(request);
         ValidationResult result = validator.validate(userNumbers);
         if (!result.isValid()) {
             return new InputNumbersDto(result.errorMessage(), null);
         }
         Set<Integer> validatedNumbers = new HashSet<>(userNumbers);
         Ticket ticket = new Ticket(UUID.randomUUID().toString(), getNextDrawDate(), validatedNumbers);
+//        Ticket saved = ticket;
         Ticket saved = repository.save(ticket);
         return new InputNumbersDto(List.of("success"), TicketMapper.mapToDto(saved));
     }

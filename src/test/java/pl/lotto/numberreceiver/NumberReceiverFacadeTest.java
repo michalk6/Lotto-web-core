@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import pl.lotto.AdjustableClock;
 import pl.lotto.numberreceiver.dto.AllNumbersDto;
 import pl.lotto.numberreceiver.dto.InputNumbersDto;
+import pl.lotto.numberreceiver.dto.InputNumbersRequestDto;
 
 import java.time.*;
 import java.util.List;
@@ -22,7 +23,7 @@ public class NumberReceiverFacadeTest {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
-        List<String> result = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 6)).messages();
+        List<String> result = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 2, 3, 4, 5, 6))).messages();
         // then
         assertThat(result).isEqualTo(List.of("success"));
     }
@@ -32,7 +33,7 @@ public class NumberReceiverFacadeTest {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 1000)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 1, 1000))).messages();
         // then
         assertThat(messages).contains("Wrong amount of numbers have been given");
         assertThat(messages).contains("Numbers out of bound have been given");
@@ -44,7 +45,7 @@ public class NumberReceiverFacadeTest {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 6, 7)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 2, 3, 4, 5, 6, 7))).messages();
         // then
         assertThat(messages).isEqualTo(List.of("Wrong amount of numbers have been given"));
     }
@@ -54,7 +55,7 @@ public class NumberReceiverFacadeTest {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 2, 3, 4, 5))).messages();
         // then
         assertThat(messages).isEqualTo(List.of("Wrong amount of numbers have been given"));
     }
@@ -64,7 +65,7 @@ public class NumberReceiverFacadeTest {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1000, 1, 2, 3, 4, 5)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1000, 1, 2, 3, 4, 5))).messages();
         // then
         assertThat(messages).isEqualTo(List.of("Numbers out of bound have been given"));
     }
@@ -74,7 +75,7 @@ public class NumberReceiverFacadeTest {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
-        List<String> messages = numberReceiverFacade.inputNumbers(List.of(1, 1, 2, 3, 4, 5)).messages();
+        List<String> messages = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 1, 2, 3, 4, 5))).messages();
         // then
         assertThat(messages).isEqualTo(List.of("Duplicated numbers have been given"));
     }
@@ -87,7 +88,7 @@ public class NumberReceiverFacadeTest {
         AdjustableClock clock = new AdjustableClock(friday.toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
-        LocalDateTime nextDrawDate = numberReceiverFacade.inputNumbers(Set.of(1, 2, 3, 4, 5, 6)).ticket().drawDate();
+        LocalDateTime nextDrawDate = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(Set.of(1, 2, 3, 4, 5, 6))).ticket().drawDate();
         // then
         LocalDateTime expectedDateTime = LocalDateTime.of(2023, Month.JANUARY, 14, 12, 0);
         assertThat(nextDrawDate).isEqualTo(expectedDateTime);
@@ -99,13 +100,13 @@ public class NumberReceiverFacadeTest {
         LocalDateTime friday = LocalDateTime.of(2023, Month.JANUARY, 10, 9, 0);
         AdjustableClock clock = new AdjustableClock(friday.toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
-        InputNumbersDto inputNumbersDto1 = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 7));
+        InputNumbersDto inputNumbersDto1 = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 2, 3, 4, 5, 7)));
         clock.plusDays(1);
-        InputNumbersDto inputNumbersDto2 = numberReceiverFacade.inputNumbers(List.of(11, 22, 33, 44, 55, 76));
+        InputNumbersDto inputNumbersDto2 = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(11, 22, 33, 44, 55, 76)));
         clock.plusDays(4);
-        InputNumbersDto inputNumbersDto3 = numberReceiverFacade.inputNumbers(List.of(1, 33, 13, 6, 5, 99));
+        InputNumbersDto inputNumbersDto3 = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 33, 13, 6, 5, 99)));
         clock.plusDays(1);
-        InputNumbersDto inputNumbersDto4 = numberReceiverFacade.inputNumbers(List.of(1, 33, 12, 11, 5, 99));
+        InputNumbersDto inputNumbersDto4 = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 33, 12, 11, 5, 99)));
         //when
         AllNumbersDto allNumbersDto = numberReceiverFacade.retrieveNumbersForCurrentDrawDate();
         //then
@@ -116,7 +117,7 @@ public class NumberReceiverFacadeTest {
     void findByLotteryId_shouldReturnMatchingTicketDto_whenMethodIsCalledWithExistentId() {
         //given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
-        InputNumbersDto inputNumbersDto = numberReceiverFacade.inputNumbers(List.of(1, 2, 3, 4, 5, 6));
+        InputNumbersDto inputNumbersDto = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 2, 3, 4, 5, 6)));
         String generatedId = inputNumbersDto.ticket().lotteryId();
         //when
         //then

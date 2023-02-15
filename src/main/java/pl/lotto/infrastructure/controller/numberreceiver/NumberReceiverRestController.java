@@ -9,16 +9,14 @@ import pl.lotto.numberreceiver.NumberReceiverFacade;
 import pl.lotto.numberreceiver.dto.InputNumbersDto;
 import pl.lotto.numberreceiver.dto.InputNumbersRequestDto;
 
-import java.util.Collection;
-
 @RestController
 @AllArgsConstructor
 public class NumberReceiverRestController {
-    final NumberReceiverFacade numberReceiverFacade;
+    private final NumberReceiverFacade numberReceiverFacade;
 
 
     @PostMapping("/inputNumbers")
     ResponseEntity<InputNumbersDto> inputNumbers(@RequestBody InputNumbersRequestDto request) {
-        return ResponseEntity.ok(numberReceiverFacade.inputNumbers(request.userNumbers()));
+        return ResponseEntity.ok(numberReceiverFacade.inputNumbers(request));
     }
 }
