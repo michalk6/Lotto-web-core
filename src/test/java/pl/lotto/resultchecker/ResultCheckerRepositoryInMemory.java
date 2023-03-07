@@ -17,7 +17,7 @@ public class ResultCheckerRepositoryInMemory implements ResultCheckerRepository 
 
     @Override
     public <S extends CheckedTicket> S save(S entity) {
-        databaseInMemory.put(entity.getLotteryId(), entity);
+        databaseInMemory.put(entity.lotteryId(), entity);
         return entity;
     }
 
@@ -25,12 +25,13 @@ public class ResultCheckerRepositoryInMemory implements ResultCheckerRepository 
     public Optional<CheckedTicket> findCheckedTicketByLotteryId(String lotteryId) {
         return databaseInMemory.values()
                 .stream()
-                .filter(ticket -> ticket.getLotteryId().equals(lotteryId))
+                .filter(ticket -> ticket.lotteryId().equals(lotteryId))
                 .findFirst();
     }
 
     @Override
     public <S extends CheckedTicket> List<S> saveAll(Iterable<S> entities) {
+        entities.forEach(entity -> databaseInMemory.put(entity.lotteryId(), entity));
         return null;
     }
 

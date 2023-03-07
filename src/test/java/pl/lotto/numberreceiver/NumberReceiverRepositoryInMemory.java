@@ -18,21 +18,21 @@ public class NumberReceiverRepositoryInMemory implements NumberReceiverRepositor
 
     @Override
     public <S extends Ticket> S save(S entity) {
-        databaseInMemory.put(entity.getLotteryId(), entity);
+        databaseInMemory.put(entity.lotteryId(), entity);
         return entity;
     }
 
     @Override
     public List<Ticket> findAllByDrawDate(LocalDateTime drawDate) {
         return databaseInMemory.values().stream()
-                .filter(ticket -> ticket.getDrawDate().equals(drawDate))
+                .filter(ticket -> ticket.drawDate().equals(drawDate))
                 .toList();
     }
 
     @Override
     public Optional<Ticket> findTicketByLotteryId(String lotteryId) {
         return databaseInMemory.values().stream()
-                .filter(ticket -> ticket.getLotteryId().equals(lotteryId))
+                .filter(ticket -> ticket.lotteryId().equals(lotteryId))
                 .findFirst();
     }
 

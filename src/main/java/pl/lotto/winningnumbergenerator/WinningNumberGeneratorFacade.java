@@ -18,7 +18,10 @@ public class WinningNumberGeneratorFacade {
 
     public WinningNumbersDto drawWinningNumbers() {
         Set<Integer> winningNumbers = winningNumberGenerator.drawWinningNumbers();
-        WinningNumbers saved = repository.save(WinningNumbers.builder().numbers(winningNumbers).drawDate(LocalDateTime.now()).build());
+        WinningNumbers saved = repository.save(WinningNumbers.builder()
+                .numbers(winningNumbers)
+                .drawDate(LocalDateTime.now())
+                .build());
         return WinningNumbersMapper.mapToDto(saved);
     }
 }
