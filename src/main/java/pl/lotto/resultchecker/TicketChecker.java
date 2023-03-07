@@ -12,9 +12,14 @@ class TicketChecker {
     }
 
     CheckedTicket checkTicket(Set<Integer> winningNumbers, Ticket toCheck) {
-        Set<Integer> userNumbers = toCheck.getUserNumbers();
+        Set<Integer> userNumbers = toCheck.userNumbers();
         int numberOfMatches = numberOfMatches(winningNumbers, userNumbers);
-        return new CheckedTicket(toCheck.getLotteryId(), toCheck.getDrawDate(), toCheck.getUserNumbers(), new GameResult(numberOfMatches));
+        return CheckedTicket.builder()
+                .lotteryId(toCheck.lotteryId())
+                .drawDate(toCheck.drawDate())
+                .userNumbers(toCheck.userNumbers())
+                .result(new GameResult(numberOfMatches))
+                .build();
     }
 
     private int numberOfMatches(Set<Integer> winningNumbers, Set<Integer> userNumbers) {

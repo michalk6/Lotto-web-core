@@ -14,6 +14,6 @@ class CheckedTicketMapper {
     }
 
     public static CheckedTicketDto mapToDto(CheckedTicket ticket) {
-        return new CheckedTicketDto(ticket.getDrawDate(), ticket.getLotteryId(), ticket.getUserNumbers(), ticket.getResult());
+        return new CheckedTicketDto(ticket.drawDate(), ticket.lotteryId(), ticket.userNumbers(), ticket.result());
     }
 }

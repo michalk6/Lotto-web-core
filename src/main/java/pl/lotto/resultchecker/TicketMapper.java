@@ -15,7 +15,7 @@ class TicketMapper {
     }
 
     public static TicketDto mapToDto(Ticket ticket) {
-        return new TicketDto(ticket.getDrawDate(), ticket.getLotteryId(), ticket.getUserNumbers());
+        return new TicketDto(ticket.drawDate(), ticket.lotteryId(), ticket.userNumbers());
     }
 
     static List<Ticket> mapToTicketList(List<TicketDto> ticketDtoList) {

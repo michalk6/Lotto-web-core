@@ -1,5 +1,6 @@
 package pl.lotto.numberreceiver;
 
+import lombok.Builder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,39 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Document
-class Ticket {
-    @Id
-    private String lotteryId;
-    private LocalDateTime drawDate;
-    private Set<Integer> userNumbers;
-
-    public Ticket(String lotteryId, LocalDateTime drawDate, Set<Integer> userNumbers) {
-        this.lotteryId = lotteryId;
-        this.drawDate = drawDate;
-        this.userNumbers = userNumbers;
-    }
-
-    public String getLotteryId() {
-        return lotteryId;
-    }
-
-    public void setLotteryId(String lotteryId) {
-        this.lotteryId = lotteryId;
-    }
-
-    public LocalDateTime getDrawDate() {
-        return drawDate;
-    }
-
-    public void setDrawDate(LocalDateTime drawDate) {
-        this.drawDate = drawDate;
-    }
-
-    public Set<Integer> getUserNumbers() {
-        return userNumbers;
-    }
-
-    public void setUserNumbers(Set<Integer> userNumbers) {
-        this.userNumbers = userNumbers;
-    }
+@Builder
+record Ticket(@Id String lotteryId,
+              LocalDateTime drawDate,
+              Set<Integer> userNumbers) {
 }

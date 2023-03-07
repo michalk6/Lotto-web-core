@@ -29,7 +29,7 @@ public class ResultCheckerFacade {
         Set<Integer> winningNumbers = retrieveWinningNumbersForCurrentDrawDate().numbers();
         List<Ticket> tickets = TicketMapper.mapToTicketList(retrieveNumbersForCurrentDrawDate().tickets());
         List<CheckedTicket> checkedTickets = comparator.checkTicketForSingleDraw(winningNumbers, tickets);
-        checkedTickets.forEach(repository::save);
+        repository.saveAll(checkedTickets);
         List<CheckedTicketDto> checkedTicketDtos = CheckedTicketMapper.mapListToDto(checkedTickets);
         return new AllCheckedTicketsDto(checkedTicketDtos);
     }
@@ -45,7 +45,7 @@ public class ResultCheckerFacade {
     public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawException {
         CheckedTicket ticket = repository.findCheckedTicketByLotteryId(lotteryId)
                 .orElseGet(() -> findFromNumberReceiver(lotteryId));
-        if (ticket.getResult() == null) {
+        if (ticket.result() == null) {
             throw new NoSuchDrawException("The draw has not yet taken place");
         }
         return CheckedTicketMapper.mapToDto(ticket);
@@ -54,6 +54,11 @@ public class ResultCheckerFacade {
     private CheckedTicket findFromNumberReceiver(String lotteryId) {
         TicketDto byLotteryId = numberReceiver.findByLotteryId(lotteryId);
         Ticket ticket = TicketMapper.mapToTicket(byLotteryId);
-        return new CheckedTicket(ticket.getLotteryId(), ticket.getDrawDate(), ticket.getUserNumbers(), null);
+        return CheckedTicket.builder()
+                .lotteryId(ticket.lotteryId())
+                .drawDate(ticket.drawDate())
+                .userNumbers(ticket.userNumbers())
+                .result(null)
+                .build();
     }
 }

@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,12 +27,12 @@ public class WinningNumbersRepositoryInMemory implements WinningNumbersRepositor
     }
 
     @Override
-    public Optional<WinningNumbers> findById(LocalDateTime localDateTime) {
+    public Optional<WinningNumbers> findById(String localDateTime) {
         return Optional.empty();
     }
 
     @Override
-    public boolean existsById(LocalDateTime localDateTime) {
+    public boolean existsById(String localDateTime) {
         return false;
     }
 
@@ -43,7 +42,7 @@ public class WinningNumbersRepositoryInMemory implements WinningNumbersRepositor
     }
 
     @Override
-    public Iterable<WinningNumbers> findAllById(Iterable<LocalDateTime> localDateTimes) {
+    public Iterable<WinningNumbers> findAllById(Iterable<String> localDateTimes) {
         return null;
     }
 
@@ -53,7 +52,7 @@ public class WinningNumbersRepositoryInMemory implements WinningNumbersRepositor
     }
 
     @Override
-    public void deleteById(LocalDateTime localDateTime) {
+    public void deleteById(String localDateTime) {
 
     }
 
@@ -63,7 +62,7 @@ public class WinningNumbersRepositoryInMemory implements WinningNumbersRepositor
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends LocalDateTime> localDateTimes) {
+    public void deleteAllById(Iterable<? extends String> localDateTimes) {
 
     }
 

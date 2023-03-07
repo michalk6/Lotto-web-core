@@ -5,6 +5,6 @@ import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
 class WinningNumbersMapper {
 
     public static WinningNumbersDto mapToDto(WinningNumbers winningNumbers) {
-        return new WinningNumbersDto(winningNumbers.getNumbers(), winningNumbers.getDrawDate());
+        return new WinningNumbersDto(winningNumbers.numbers(), winningNumbers.drawDate());
     }
 }

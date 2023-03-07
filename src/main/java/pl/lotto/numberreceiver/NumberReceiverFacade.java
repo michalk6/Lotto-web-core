@@ -11,12 +11,12 @@ import java.util.*;
 public class NumberReceiverFacade {
 
     private final UserNumberValidator validator;
-    private final NextDrawDateGenerator scheduler;
+    private final NextDrawDateGenerator drawDateGenerator;
     private final NumberReceiverRepository repository;
 
     public NumberReceiverFacade(UserNumberValidator validator, NextDrawDateGenerator scheduler, NumberReceiverRepository repository) {
         this.validator = validator;
-        this.scheduler = scheduler;
+        this.drawDateGenerator = scheduler;
         this.repository = repository;
     }
 
@@ -27,20 +27,23 @@ public class NumberReceiverFacade {
             return new InputNumbersDto(result.errorMessage(), null);
         }
         Set<Integer> validatedNumbers = new HashSet<>(userNumbers);
-        Ticket ticket = new Ticket(UUID.randomUUID().toString(), getNextDrawDate(), validatedNumbers);
-//        Ticket saved = ticket;
+        Ticket ticket = Ticket.builder()
+                .lotteryId(UUID.randomUUID().toString())
+                .drawDate(getNextDrawDate())
+                .userNumbers(validatedNumbers)
+                .build();
         Ticket saved = repository.save(ticket);
         return new InputNumbersDto(List.of("success"), TicketMapper.mapToDto(saved));
     }
 
     public AllNumbersDto retrieveNumbersForCurrentDrawDate() {
-        List<Ticket> allByDrawDate = repository.findAllByDrawDate(scheduler.nextDrawDate());
+        List<Ticket> allByDrawDate = repository.findAllByDrawDate(drawDateGenerator.nextDrawDate());
         List<TicketDto> ticketDtos = TicketMapper.mapListToDto(allByDrawDate);
         return new AllNumbersDto(ticketDtos);
     }
 
     private LocalDateTime getNextDrawDate() {
-        return scheduler.nextDrawDate();
+        return drawDateGenerator.nextDrawDate();
     }
 
     public TicketDto findByLotteryId(String lotteryId) {
