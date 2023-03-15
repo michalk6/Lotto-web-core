@@ -1,10 +1,12 @@
 package pl.lotto.winningnumbergenerator;
 
 import org.junit.jupiter.api.Test;
+import pl.lotto.numberreceiver.NumberReceiverFacade;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 class WinningNumberGeneratorFacadeTest {
     @Test
@@ -12,7 +14,8 @@ class WinningNumberGeneratorFacadeTest {
         // given
         WinningNumberGenerator winningNumberGenerator = new WinningNumberGenerator();
         WinningNumbersRepositoryInMemory repository = new WinningNumbersRepositoryInMemory();
-        WinningNumberGeneratorFacade winningNumberGeneratorFacade = new WinningNumberGeneratorFacade(winningNumberGenerator, repository);
+        NumberReceiverFacade numberReceiverFacade = mock(NumberReceiverFacade.class);
+        WinningNumberGeneratorFacade winningNumberGeneratorFacade = new WinningNumberGeneratorFacade(winningNumberGenerator, numberReceiverFacade, repository);
         // when
         Set<Integer> numbersDrawn = winningNumberGeneratorFacade.drawWinningNumbers().numbers();
         // then

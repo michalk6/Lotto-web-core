@@ -133,4 +133,17 @@ public class NumberReceiverFacadeTest {
         assertThatThrownBy(() -> numberReceiverFacade.findByLotteryId("nonexistent")).isInstanceOf(NoSuchTicketException.class);
         assertThatThrownBy(() -> numberReceiverFacade.findByLotteryId("nonexistent")).hasMessage("Ticket with given id not found");
     }
+
+    @Test
+    void getNextDrawDate_shouldReturnNextSaturdayDate() {
+        // given
+        LocalDateTime friday = LocalDateTime.of(2023, Month.JANUARY, 10, 9, 0);
+        AdjustableClock clock = new AdjustableClock(friday.toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
+        // when
+        LocalDateTime nextDrawDate = numberReceiverFacade.getNextDrawDate();
+        // then
+        LocalDateTime expected = LocalDateTime.of(2023, Month.JANUARY, 14, 12, 0);
+        assertThat(nextDrawDate).isEqualTo(expected);
+    }
 }

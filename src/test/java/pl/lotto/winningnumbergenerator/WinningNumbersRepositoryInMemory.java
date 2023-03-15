@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +40,19 @@ public class WinningNumbersRepositoryInMemory implements WinningNumbersRepositor
     @Override
     public List<WinningNumbers> findAll() {
         return databaseInMemory.values().stream().toList();
+    }
+
+    @Override
+    public boolean existsByDrawDate(LocalDateTime drawDate) {
+        return databaseInMemory.values().stream()
+                .anyMatch(winningNumber -> winningNumber.drawDate().equals(drawDate));
+    }
+
+    @Override
+    public Optional<WinningNumbers> findWinningNumbersByDrawDate(LocalDateTime drawDate) {
+        return databaseInMemory.values().stream()
+                .filter(winningNumber -> winningNumber.drawDate().equals(drawDate))
+                .findFirst();
     }
 
     @Override

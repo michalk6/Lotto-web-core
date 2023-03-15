@@ -42,7 +42,7 @@ public class NumberReceiverFacade {
         return new AllNumbersDto(ticketDtos);
     }
 
-    private LocalDateTime getNextDrawDate() {
+    public LocalDateTime getNextDrawDate() {
         return drawDateGenerator.nextDrawDate();
     }
 

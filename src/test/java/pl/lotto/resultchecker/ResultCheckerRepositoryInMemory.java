@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +33,9 @@ public class ResultCheckerRepositoryInMemory implements ResultCheckerRepository 
     @Override
     public <S extends CheckedTicket> List<S> saveAll(Iterable<S> entities) {
         entities.forEach(entity -> databaseInMemory.put(entity.lotteryId(), entity));
-        return null;
+        List<S> result = new ArrayList<>();
+        entities.forEach(result::add);
+        return result;
     }
 
     @Override

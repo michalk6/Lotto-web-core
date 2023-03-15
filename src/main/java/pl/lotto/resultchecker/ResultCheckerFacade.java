@@ -39,7 +39,7 @@ public class ResultCheckerFacade {
     }
 
     private WinningNumbersDto retrieveWinningNumbersForCurrentDrawDate() {
-        return numberGenerator.drawWinningNumbers();
+        return numberGenerator.retrieveNumbersForCurrentDrawDate();
     }
 
     public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawException {
