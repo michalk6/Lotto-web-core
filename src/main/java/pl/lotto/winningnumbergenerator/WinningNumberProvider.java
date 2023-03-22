@@ -2,6 +2,6 @@ package pl.lotto.winningnumbergenerator;
 
 import java.util.Set;
 
-interface WinningNumberProvider {
+public interface WinningNumberProvider {
     Set<Integer> drawWinningNumbers();
 }

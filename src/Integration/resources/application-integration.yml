@@ -2,4 +2,4 @@ lotto:
   number-generator:
     lotteryRunOccurrence: "*/1 * * * * *"
   result-checker:
-    lotteryRunOccurrence: "*/2  * * * * *"
+    lotteryRunOccurrence: "*/1 * * * * *"

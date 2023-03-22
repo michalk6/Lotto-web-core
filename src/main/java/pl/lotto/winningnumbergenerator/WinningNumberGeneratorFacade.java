@@ -29,7 +29,7 @@ public class WinningNumberGeneratorFacade {
     }
 
     public WinningNumbersDto retrieveNumbersForCurrentDrawDate() {
-        WinningNumbers winningNumbers = repository.findWinningNumbersByDrawDate(getNextDrawDate()).get();
+        WinningNumbers winningNumbers = repository.findWinningNumbersByDrawDate(getNextDrawDate()).get(); // todo: need to add NoSuchElementException protection
         return WinningNumbersMapper.mapToDto(winningNumbers);
     }
 

@@ -16,12 +16,14 @@ public class ResultCheckerFacade {
     private final NumberReceiverFacade numberReceiver;
     private final ResultComparator comparator;
     private final ResultCheckerRepository repository;
+    private final ResultCheckerEventRepository eventRepository;
 
-    public ResultCheckerFacade(WinningNumberGeneratorFacade numberGenerator, NumberReceiverFacade numberReceiver, ResultComparator comparator, ResultCheckerRepository repository) {
+    public ResultCheckerFacade(WinningNumberGeneratorFacade numberGenerator, NumberReceiverFacade numberReceiver, ResultComparator comparator, ResultCheckerRepository repository, ResultCheckerEventRepository eventRepository) {
         this.numberGenerator = numberGenerator;
         this.numberReceiver = numberReceiver;
         this.comparator = comparator;
         this.repository = repository;
+        this.eventRepository = eventRepository;
     }
 
 
@@ -30,8 +32,13 @@ public class ResultCheckerFacade {
         List<Ticket> tickets = TicketMapper.mapToTicketList(retrieveNumbersForCurrentDrawDate().tickets());
         List<CheckedTicket> checkedTickets = comparator.checkTicketForSingleDraw(winningNumbers, tickets);
         repository.saveAll(checkedTickets);
+        eventRepository.save(ResultCheckerEvent.builder().drawDate(numberReceiver.getNextDrawDate()).build());
         List<CheckedTicketDto> checkedTicketDtos = CheckedTicketMapper.mapListToDto(checkedTickets);
         return new AllCheckedTicketsDto(checkedTicketDtos);
+    }
+
+    public boolean ticketsAreCheckedForNextDrawDate() {
+        return eventRepository.existsResultCheckerEventByDrawDate(numberReceiver.getNextDrawDate());
     }
 
     private AllNumbersDto retrieveNumbersForCurrentDrawDate() {

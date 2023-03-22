@@ -10,14 +10,16 @@ public class ResultCheckerConfiguration {
     public ResultCheckerFacade createForTests(
             WinningNumberGeneratorFacade winningNumberGeneratorMock,
             NumberReceiverFacade numberReceiverMock,
-            ResultCheckerRepository repository) {
+            ResultCheckerRepository repository,
+            ResultCheckerEventRepository eventRepository) {
         TicketChecker ticketChecker = new TicketChecker();
         ResultComparator resultComparator = new ResultComparator(ticketChecker);
-        return new ResultCheckerFacade(winningNumberGeneratorMock, numberReceiverMock, resultComparator, repository);
+
+        return new ResultCheckerFacade(winningNumberGeneratorMock, numberReceiverMock, resultComparator, repository, eventRepository);
     }
 
     @Bean
-    public ResultCheckerFacade resultCheckerFacade(WinningNumberGeneratorFacade numberGenerator, NumberReceiverFacade numberReceiver, ResultComparator comparator, ResultCheckerRepository repository) {
-        return new ResultCheckerFacade(numberGenerator, numberReceiver, comparator, repository);
+    public ResultCheckerFacade resultCheckerFacade(WinningNumberGeneratorFacade numberGenerator, NumberReceiverFacade numberReceiver, ResultComparator comparator, ResultCheckerRepository repository, ResultCheckerEventRepository eventRepository) {
+        return new ResultCheckerFacade(numberGenerator, numberReceiver, comparator, repository, eventRepository);
     }
 }

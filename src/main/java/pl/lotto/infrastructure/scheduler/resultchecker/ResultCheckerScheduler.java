@@ -17,8 +17,11 @@ public class ResultCheckerScheduler {
     @Scheduled(cron = "${lotto.result-checker.lotteryRunOccurrence}")
     public void checkResultsForCurrentDraw() {
         log.info("result checker scheduler started");
-        if (winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate())
+        if (winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate() &&
+                !resultCheckerFacade.ticketsAreCheckedForNextDrawDate()) {
             resultCheckerFacade.checkAllTicketsForCurrentDrawDate();
+            log.info("result checker scheduler success");
+        }
         log.info("result checker scheduler finished");
     }
 }

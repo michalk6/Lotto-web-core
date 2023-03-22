@@ -15,8 +15,10 @@ public class WinningNumberGeneratorScheduler {
     @Scheduled(cron = "${lotto.number-generator.lotteryRunOccurrence}")
     public void generateWinningNumbers() {
         log.info("winning number generator scheduler started");
-        if (!winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate())
+        if (!winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate()) {
             winningNumberGeneratorFacade.drawWinningNumbers();
+            log.info("winning number generator scheduler success");
+        }
         log.info("winning number generator scheduler finished");
     }
 

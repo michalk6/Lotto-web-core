@@ -7,11 +7,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 import pl.lotto.numberreceiver.dto.InputNumbersDto;
 import pl.lotto.resultannouncer.ResultDto;
+import pl.lotto.resultchecker.ResultCheckerFacade;
 import pl.lotto.winningnumbergenerator.WinningNumberGeneratorFacade;
 
 import java.time.Duration;
@@ -26,7 +33,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = {LottoGameSpringBootApp.class, IntegrationTestConfiguration.class})
 @AutoConfigureMockMvc
 @ActiveProfiles("integration")
+@Testcontainers
 public class WinnerUserIntegrationTest {
+    @Container
+    public static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo:4.0.10"));
 
     @Autowired
     MockMvc mockMvc;
@@ -38,6 +48,14 @@ public class WinnerUserIntegrationTest {
 
     @Autowired
     WinningNumberGeneratorFacade winningNumberGeneratorFacade;
+
+    @Autowired
+    ResultCheckerFacade resultCheckerFacade;
+
+    @DynamicPropertySource
+    public static void propertyOverride(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+    }
 
     @Test
     void winnerUserScenario() throws Exception {
@@ -76,8 +94,23 @@ public class WinnerUserIntegrationTest {
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate());
         // step 5: system checked result for user with lotteryId "example"
-            // awaitility i inny scheduler
+        await().atMost(20, TimeUnit.SECONDS)
+                .pollInterval(Duration.ofSeconds(1L))
+                .until(() -> resultCheckerFacade.ticketsAreCheckedForNextDrawDate());
         // step 6: user with id "example" checked result system returned 6 matches
-            // zapytanie http://
+        // given
+        // when
+//        clock.plusDays(1);
+        ResultActions checkWinnerRequestAfterDraw = mockMvc.perform(get("/checkWinner/" + result.ticket().lotteryId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+        // then
+        MvcResult checkWinnerRequestAfterDrawResult = checkWinnerRequestAfterDraw.andExpect(status().isNoContent()).andReturn();
+        String checkWinnerRequestAfterDrawResultJson = checkWinnerRequestAfterDrawResult.getResponse().getContentAsString();
+        System.out.println(checkWinnerRequestAfterDrawResultJson);
+        System.out.println(winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate());
+        System.out.println(resultCheckerFacade.ticketsAreCheckedForNextDrawDate());
+        ResultDto resultDtoAfterDraw = objectMapper.readValue(checkWinnerRequestAfterDrawResultJson, ResultDto.class);
+        assertThat(resultDtoAfterDraw.message()).isEqualTo("6");
     }
 }
