@@ -10,20 +10,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public class ResultCheckerEventRepositoryInMemory implements ResultCheckerEventRepository {
-    Map<String, CheckedTicket> databaseInMemory = new ConcurrentHashMap<>();
-
+class ResultCheckerEventRepositoryInMemory implements ResultCheckerEventRepository {
+    Map<String, ResultCheckerEvent> databaseInMemory = new ConcurrentHashMap<>();
     @Override
     public boolean existsResultCheckerEventByDrawDate(LocalDateTime drawDate) {
-        return false;
+        return databaseInMemory.values().stream()
+                .anyMatch(event -> event.drawDate().equals(drawDate));
     }
 
     @Override
     public <S extends ResultCheckerEvent> S save(S entity) {
-        return null;
+        ResultCheckerEvent newResultCheckerEvent = ResultCheckerEvent.builder().id(UUID.randomUUID().toString()).drawDate(entity.drawDate()).build();
+        databaseInMemory.put(newResultCheckerEvent.id(), newResultCheckerEvent);
+        return (S) newResultCheckerEvent;
     }
 
     @Override

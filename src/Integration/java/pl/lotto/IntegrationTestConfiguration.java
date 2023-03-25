@@ -17,7 +17,7 @@ public class IntegrationTestConfiguration {
     @Bean
     @Primary
     public AdjustableIntegrationClock clock() {
-        LocalDateTime friday = LocalDateTime.of(2023, Month.FEBRUARY, 16, 11, 55);
+        LocalDateTime friday = LocalDateTime.of(2023, Month.FEBRUARY, 16, 10, 55);
         return new AdjustableIntegrationClock(friday.toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
     }
 

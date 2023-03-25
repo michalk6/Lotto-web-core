@@ -23,6 +23,9 @@ public class NumberReceiverFacade {
     public InputNumbersDto inputNumbers(InputNumbersRequestDto request) {
         Collection<Integer> userNumbers = RequestMapper.mapRequestDtoToCollection(request);
         ValidationResult result = validator.validate(userNumbers);
+        if (drawOccurs()) {
+            return new InputNumbersDto(List.of("The draw is currently taking place"), null);
+        }
         if (!result.isValid()) {
             return new InputNumbersDto(result.errorMessage(), null);
         }
@@ -44,6 +47,14 @@ public class NumberReceiverFacade {
 
     public LocalDateTime getNextDrawDate() {
         return drawDateGenerator.nextDrawDate();
+    }
+
+    private LocalDateTime getCurrentTime() {
+        return drawDateGenerator.currentTime();
+    }
+
+    private boolean drawOccurs() {
+        return getCurrentTime().isAfter(getNextDrawDate().minusMinutes(10));
     }
 
     public TicketDto findByLotteryId(String lotteryId) {

@@ -13,11 +13,24 @@ class NextDrawDateGenerator {
     }
 
     LocalDateTime nextDrawDate() {
-        return LocalDateTime.now(clock)
-                .with(TemporalAdjusters.next(DayOfWeek.SATURDAY))
+        LocalDateTime currentTime = currentTime();
+        if (currentTime.getDayOfWeek().equals(DayOfWeek.SATURDAY) && currentTime.getHour() >= 12) {
+            return currentTime
+                    .with(TemporalAdjusters.next(DayOfWeek.SATURDAY))
+                    .withHour(12)
+                    .withMinute(0)
+                    .withSecond(0)
+                    .withNano(0);
+        }
+        return currentTime
+                .with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY))
                 .withHour(12)
                 .withMinute(0)
                 .withSecond(0)
                 .withNano(0);
+    }
+
+    LocalDateTime currentTime() {
+        return LocalDateTime.now(clock);
     }
 }

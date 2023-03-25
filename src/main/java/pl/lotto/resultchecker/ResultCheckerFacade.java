@@ -32,7 +32,10 @@ public class ResultCheckerFacade {
         List<Ticket> tickets = TicketMapper.mapToTicketList(retrieveNumbersForCurrentDrawDate().tickets());
         List<CheckedTicket> checkedTickets = comparator.checkTicketForSingleDraw(winningNumbers, tickets);
         repository.saveAll(checkedTickets);
-        eventRepository.save(ResultCheckerEvent.builder().drawDate(numberReceiver.getNextDrawDate()).build());
+        ResultCheckerEvent resultCheckerEvent = ResultCheckerEvent.builder()
+                .drawDate(numberReceiver.getNextDrawDate())
+                .build();
+        eventRepository.save(resultCheckerEvent);
         List<CheckedTicketDto> checkedTicketDtos = CheckedTicketMapper.mapListToDto(checkedTickets);
         return new AllCheckedTicketsDto(checkedTicketDtos);
     }

@@ -1,6 +1,5 @@
 package pl.lotto.numberreceiver;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pl.lotto.AdjustableClock;
 import pl.lotto.numberreceiver.dto.AllNumbersDto;
@@ -41,6 +40,18 @@ public class NumberReceiverFacadeTest {
     }
 
     @Test
+    public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyThatTheDrawIsCurrentlyTakingPlace_whenPlaysTenMinutesBeforeDrawDate() {
+        // given
+        LocalDateTime tenMinutesBeforeDraw = LocalDateTime.of(2023, Month.MARCH, 18, 10, 50, 0, 1);
+        AdjustableClock clock = new AdjustableClock(tenMinutesBeforeDraw.toInstant(ZoneOffset.UTC), ZoneId.systemDefault());
+        NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
+        // when
+        List<String> result = numberReceiverFacade.inputNumbers(new InputNumbersRequestDto(List.of(1, 2, 3, 4, 5, 6))).messages();
+        // then
+        assertThat(result).isEqualTo(List.of("The draw is currently taking place"));
+    }
+
+    @Test
     public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEnteredToMuchNumbers() {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
@@ -51,7 +62,7 @@ public class NumberReceiverFacadeTest {
     }
 
     @Test
-    public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEnteredNotEnoughNumbers() {
+    public void inputNumbers_shouldReturnListOfErrorMessagesWhichContainsOnlyWrongAmountOfNumbersMessage_whenUserEntersNotEnoughNumbers() {
         // given
         NumberReceiverFacade numberReceiverFacade = new NumberReceiverConfiguration().createForTest(clock, repository);
         // when
@@ -81,7 +92,6 @@ public class NumberReceiverFacadeTest {
     }
 
     @Test
-    @DisplayName("should return next saturday draw date when user played on friday")
     public void inputNumbers_shouldReturnNextSaturdayDrawDate_whenUserPlayedOnFriday() {
         // given
         LocalDateTime friday = LocalDateTime.of(2023, Month.JANUARY, 12, 11, 0);

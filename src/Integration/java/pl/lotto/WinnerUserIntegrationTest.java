@@ -73,7 +73,6 @@ public class WinnerUserIntegrationTest {
         // then
         MvcResult inputNumbersRequestResult = inputNumbersRequest.andExpect(status().isOk()).andReturn();
         String inputNumbersRequestResultJson = inputNumbersRequestResult.getResponse().getContentAsString();
-        System.out.println(inputNumbersRequestResultJson);
         InputNumbersDto result = objectMapper.readValue(inputNumbersRequestResultJson, InputNumbersDto.class);
         // step 2: user with id "example" tried to check result and system returned that draw didn't take place yet
         // given
@@ -82,9 +81,8 @@ public class WinnerUserIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         // then
-        MvcResult checkWinnerRequestResult = checkWinnerRequest.andExpect(status().isNoContent()).andReturn();
+        MvcResult checkWinnerRequestResult = checkWinnerRequest.andExpect(status().isOk()).andReturn();
         String checkWinnerRequestResultJson = checkWinnerRequestResult.getResponse().getContentAsString();
-        System.out.println(checkWinnerRequestResultJson);
         ResultDto resultDto = objectMapper.readValue(checkWinnerRequestResultJson, ResultDto.class);
         assertThat(resultDto.message()).isEqualTo("The draw has not yet taken place");
         // step 3: two days passed 4.02.2023 T 11:55
@@ -100,16 +98,12 @@ public class WinnerUserIntegrationTest {
         // step 6: user with id "example" checked result system returned 6 matches
         // given
         // when
-//        clock.plusDays(1);
         ResultActions checkWinnerRequestAfterDraw = mockMvc.perform(get("/checkWinner/" + result.ticket().lotteryId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
         );
         // then
-        MvcResult checkWinnerRequestAfterDrawResult = checkWinnerRequestAfterDraw.andExpect(status().isNoContent()).andReturn();
+        MvcResult checkWinnerRequestAfterDrawResult = checkWinnerRequestAfterDraw.andExpect(status().isOk()).andReturn();
         String checkWinnerRequestAfterDrawResultJson = checkWinnerRequestAfterDrawResult.getResponse().getContentAsString();
-        System.out.println(checkWinnerRequestAfterDrawResultJson);
-        System.out.println(winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate());
-        System.out.println(resultCheckerFacade.ticketsAreCheckedForNextDrawDate());
         ResultDto resultDtoAfterDraw = objectMapper.readValue(checkWinnerRequestAfterDrawResultJson, ResultDto.class);
         assertThat(resultDtoAfterDraw.message()).isEqualTo("6");
     }
