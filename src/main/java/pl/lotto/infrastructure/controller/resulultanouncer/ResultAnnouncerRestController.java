@@ -16,6 +16,6 @@ public class ResultAnnouncerRestController {
     @GetMapping("/checkWinner/{id}")
     public ResponseEntity<ResultDto> checkWinner(@PathVariable String id) {
         ResultDto resultDto = resultAnnouncerFacade.checkWinner(id);
-        return ResponseEntity.ok(resultDto);//status(HttpStatus.NO_CONTENT).body(resultDto);
+        return ResponseEntity.ok(resultDto);
     }
 }

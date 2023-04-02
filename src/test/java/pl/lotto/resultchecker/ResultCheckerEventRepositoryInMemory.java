@@ -24,9 +24,9 @@ class ResultCheckerEventRepositoryInMemory implements ResultCheckerEventReposito
 
     @Override
     public <S extends ResultCheckerEvent> S save(S entity) {
-        ResultCheckerEvent newResultCheckerEvent = ResultCheckerEvent.builder().id(UUID.randomUUID().toString()).drawDate(entity.drawDate()).build();
-        databaseInMemory.put(newResultCheckerEvent.id(), newResultCheckerEvent);
-        return (S) newResultCheckerEvent;
+        ResultCheckerEvent toSave = ResultCheckerEvent.builder().id(UUID.randomUUID().toString()).drawDate(entity.drawDate()).build();
+        databaseInMemory.put(toSave.id(), toSave);
+        return (S) toSave;
     }
 
     @Override
