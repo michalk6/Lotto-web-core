@@ -12,16 +12,15 @@ import pl.lotto.winningnumbergenerator.WinningNumberGeneratorFacade;
 @AllArgsConstructor
 public class ResultCheckerScheduler {
     private final ResultCheckerFacade resultCheckerFacade;
-    private final WinningNumberGeneratorFacade winningNumberGeneratorFacade;
 
     @Scheduled(cron = "${lotto.result-checker.lotteryRunOccurrence}")
     public void checkResultsForCurrentDraw() {
         log.info("result checker scheduler started");
-        if (winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate() &&
-                !resultCheckerFacade.ticketsAreCheckedForNextDrawDate()) {
-            resultCheckerFacade.checkAllTicketsForCurrentDrawDate();
-            log.info("result checker scheduler success");
-        }
+//        if (winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate() &&
+//                !resultCheckerFacade.ticketsAreCheckedForNextDrawDate()) {
+        resultCheckerFacade.checkAllTicketsForCurrentDrawDate();
+        log.info("result checker scheduler success");
+//        }
         log.info("result checker scheduler finished");
     }
 }

@@ -1,30 +1,24 @@
 package pl.lotto.resultchecker;
 
+import lombok.AllArgsConstructor;
+import pl.lotto.infrastructure.services.winningnumberservice.WinningNumberService;
 import pl.lotto.numberreceiver.NumberReceiverFacade;
 import pl.lotto.numberreceiver.dto.AllNumbersDto;
 import pl.lotto.numberreceiver.dto.TicketDto;
 import pl.lotto.resultchecker.dto.AllCheckedTicketsDto;
 import pl.lotto.resultchecker.dto.CheckedTicketDto;
-import pl.lotto.winningnumbergenerator.WinningNumberGeneratorFacade;
 import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
 
 import java.util.List;
 import java.util.Set;
 
+@AllArgsConstructor
 public class ResultCheckerFacade {
-    private final WinningNumberGeneratorFacade numberGenerator;
+    private final WinningNumberService winningNumberService;
     private final NumberReceiverFacade numberReceiver;
     private final ResultComparator comparator;
     private final ResultCheckerRepository repository;
     private final ResultCheckerEventRepository eventRepository;
-
-    public ResultCheckerFacade(WinningNumberGeneratorFacade numberGenerator, NumberReceiverFacade numberReceiver, ResultComparator comparator, ResultCheckerRepository repository, ResultCheckerEventRepository eventRepository) {
-        this.numberGenerator = numberGenerator;
-        this.numberReceiver = numberReceiver;
-        this.comparator = comparator;
-        this.repository = repository;
-        this.eventRepository = eventRepository;
-    }
 
 
     public AllCheckedTicketsDto checkAllTicketsForCurrentDrawDate() {
@@ -49,7 +43,8 @@ public class ResultCheckerFacade {
     }
 
     private WinningNumbersDto retrieveWinningNumbersForCurrentDrawDate() {
-        return numberGenerator.retrieveNumbersForCurrentDrawDate();
+        return winningNumberService.retrieveNumbersFromNumberGenerator();
+//        return numberGenerator.retrieveNumbersForCurrentDrawDate();
     }
 
     public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawException {

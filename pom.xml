@@ -34,6 +34,14 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--Wiremock dependency-->
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>2.16.0</version>
+            <scope>test</scope>
+        </dependency>
+
         <!--Microservice dependency-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

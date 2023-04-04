@@ -1,12 +1,12 @@
 package pl.lotto.resultchecker;
 
 import org.junit.jupiter.api.Test;
+import pl.lotto.infrastructure.services.winningnumberservice.WinningNumberService;
 import pl.lotto.numberreceiver.NumberReceiverFacade;
 import pl.lotto.numberreceiver.dto.AllNumbersDto;
 import pl.lotto.numberreceiver.dto.TicketDto;
 import pl.lotto.resultchecker.dto.AllCheckedTicketsDto;
 import pl.lotto.resultchecker.dto.CheckedTicketDto;
-import pl.lotto.winningnumbergenerator.WinningNumberGeneratorFacade;
 import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
 
 import java.time.LocalDateTime;
@@ -27,15 +27,15 @@ class ResultCheckerFacadeTest {
     void checkWinner_shouldReturnTicketWithGameResultWithSixMatches_whenSearchingByProperId() {
         //given
         NumberReceiverFacade numberReceiverMock = mock(NumberReceiverFacade.class);
-        WinningNumberGeneratorFacade winningNumberGeneratorMock = mock(WinningNumberGeneratorFacade.class);
-        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberGeneratorMock, numberReceiverMock, repository, eventRepository);
+        WinningNumberService winningNumberServiceMock = mock(WinningNumberService.class);
+        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberServiceMock, numberReceiverMock, repository, eventRepository);
         LocalDateTime now = LocalDateTime.now();
         when(numberReceiverMock.retrieveNumbersForCurrentDrawDate()).thenReturn(
                 new AllNumbersDto(List.of(
                         new TicketDto(now, "example", Set.of(1, 2, 3, 4, 5, 6))
                 ))
         );
-        when(winningNumberGeneratorMock.retrieveNumbersForCurrentDrawDate()).thenReturn(
+        when(winningNumberServiceMock.retrieveNumbersFromNumberGenerator()).thenReturn(
                 new WinningNumbersDto(Set.of(1, 2, 3, 4, 5, 6), now)
         );
         //when
@@ -50,8 +50,8 @@ class ResultCheckerFacadeTest {
     void checkWinner_shouldThrowNoSuchDrawException_whenMethodIsCalledBeforeDraw() {
         //given
         NumberReceiverFacade numberReceiverMock = mock(NumberReceiverFacade.class);
-        WinningNumberGeneratorFacade winningNumberGeneratorMock = mock(WinningNumberGeneratorFacade.class);
-        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberGeneratorMock, numberReceiverMock, repository, eventRepository);
+        WinningNumberService winningNumberServiceMock = mock(WinningNumberService.class);
+        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberServiceMock, numberReceiverMock, repository, eventRepository);
         LocalDateTime now = LocalDateTime.now();
         String userId = "userId";
         when(numberReceiverMock.findByLotteryId(userId)).thenReturn(new TicketDto(now, userId, Set.of(1, 2, 3, 4, 5, 6)));
@@ -66,8 +66,8 @@ class ResultCheckerFacadeTest {
         //given
         NumberReceiverFacade numberReceiverMock = mock(NumberReceiverFacade.class);
         LocalDateTime now = LocalDateTime.now();
-        WinningNumberGeneratorFacade winningNumberGeneratorMock = mock(WinningNumberGeneratorFacade.class);
-        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberGeneratorMock, numberReceiverMock, repository, eventRepository);
+        WinningNumberService winningNumberServiceMock = mock(WinningNumberService.class);
+        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberServiceMock, numberReceiverMock, repository, eventRepository);
         when(numberReceiverMock.retrieveNumbersForCurrentDrawDate()).thenReturn(
                 new AllNumbersDto(List.of(
                         new TicketDto(now, "example", Set.of(1, 2, 3, 4, 5, 6)),
@@ -75,7 +75,7 @@ class ResultCheckerFacadeTest {
                         new TicketDto(now, "example2", Set.of(3, 4, 5, 6, 7, 8))
                 ))
         );
-        when(winningNumberGeneratorMock.retrieveNumbersForCurrentDrawDate()).thenReturn(
+        when(winningNumberServiceMock.retrieveNumbersFromNumberGenerator()).thenReturn(
                 new WinningNumbersDto(Set.of(1, 2, 3, 4, 5, 6), now)
         );
         //when
@@ -92,8 +92,8 @@ class ResultCheckerFacadeTest {
     public void ticketsAreCheckedForNextDrawDate_shouldReturnFalse_IfIfCheckAllTicketsForCurrentDrawDateWasNotStarted() {
         // given
         NumberReceiverFacade numberReceiverMock = mock(NumberReceiverFacade.class);
-        WinningNumberGeneratorFacade winningNumberGeneratorMock = mock(WinningNumberGeneratorFacade.class);
-        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberGeneratorMock, numberReceiverMock, repository, eventRepository);
+        WinningNumberService winningNumberServiceMock = mock(WinningNumberService.class);
+        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberServiceMock, numberReceiverMock, repository, eventRepository);
         // when
         // then
         assertThat(resultCheckerFacade.ticketsAreCheckedForNextDrawDate()).isFalse();
@@ -104,10 +104,10 @@ class ResultCheckerFacadeTest {
         // given
         LocalDateTime now = LocalDateTime.now();
         NumberReceiverFacade numberReceiverMock = mock(NumberReceiverFacade.class);
-        WinningNumberGeneratorFacade winningNumberGeneratorMock = mock(WinningNumberGeneratorFacade.class);
-        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberGeneratorMock, numberReceiverMock, repository, eventRepository);
+        WinningNumberService winningNumberServiceMock = mock(WinningNumberService.class);
+        ResultCheckerFacade resultCheckerFacade = new ResultCheckerConfiguration().createForTests(winningNumberServiceMock, numberReceiverMock, repository, eventRepository);
         when(numberReceiverMock.retrieveNumbersForCurrentDrawDate()).thenReturn(new AllNumbersDto(Collections.emptyList()));
-        when(winningNumberGeneratorMock.retrieveNumbersForCurrentDrawDate()).thenReturn(
+        when(winningNumberServiceMock.retrieveNumbersFromNumberGenerator()).thenReturn(
                 new WinningNumbersDto(Set.of(1, 2, 3, 4, 5, 6), LocalDateTime.now())
         );
         when(numberReceiverMock.getNextDrawDate()).thenReturn(now);
