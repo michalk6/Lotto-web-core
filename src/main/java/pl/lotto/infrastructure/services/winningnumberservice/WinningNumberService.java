@@ -14,11 +14,11 @@ import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
 public class WinningNumberService {
     private static final int NUMBER_OF_NUMBERS = LottoRules.NUMBER_OF_NUMBERS;
     private static final int MAX_NUMBER = LottoRules.MAX_NUMBER;
-    private final WebClient winningNumberClient = WebClient.create("http://localhost:8888");
+    private final WebClient winningNumberWebClient;
     private final NumberReceiverFacade numberReceiverFacade;
 
     public WinningNumbersDto retrieveNumbersFromNumberGenerator() {
-        return winningNumberClient
+        return winningNumberWebClient
                 .method(HttpMethod.GET)
                 .uri("/generateNumbers?amount=" + NUMBER_OF_NUMBERS + "&max=" + MAX_NUMBER)
                 .bodyValue(numberReceiverFacade.getNextDrawDate())
