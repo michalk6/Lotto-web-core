@@ -1,20 +1,19 @@
 package pl.lotto.resultchecker;
 
 import lombok.AllArgsConstructor;
-import pl.lotto.infrastructure.services.winningnumberservice.WinningNumberService;
 import pl.lotto.numberreceiver.NumberReceiverFacade;
 import pl.lotto.numberreceiver.dto.AllNumbersDto;
 import pl.lotto.numberreceiver.dto.TicketDto;
 import pl.lotto.resultchecker.dto.AllCheckedTicketsDto;
 import pl.lotto.resultchecker.dto.CheckedTicketDto;
-import pl.lotto.winningnumbergenerator.dto.WinningNumbersDto;
+import pl.lotto.resultchecker.dto.WinningNumbersDto;
 
 import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
 public class ResultCheckerFacade {
-    private final WinningNumberService winningNumberService;
+    private final WinningNumberService winningNumberHttpService;
     private final NumberReceiverFacade numberReceiver;
     private final ResultComparator comparator;
     private final ResultCheckerRepository repository;
@@ -43,8 +42,7 @@ public class ResultCheckerFacade {
     }
 
     private WinningNumbersDto retrieveWinningNumbersForCurrentDrawDate() {
-        return winningNumberService.retrieveNumbersFromNumberGenerator();
-//        return numberGenerator.retrieveNumbersForCurrentDrawDate();
+        return winningNumberHttpService.retrieveNumbersFromNumberGenerator();
     }
 
     public CheckedTicketDto checkWinner(String lotteryId) throws NoSuchDrawException {

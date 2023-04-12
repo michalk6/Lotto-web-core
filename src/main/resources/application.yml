@@ -9,7 +9,5 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
 lotto:
   number-generator-base-url: "http://localhost:8888"
-  number-generator:
-    lotteryRunOccurrence: "0 55 11 * * 6"
   result-checker:
     lotteryRunOccurrence: "0 56 11 * * 6"

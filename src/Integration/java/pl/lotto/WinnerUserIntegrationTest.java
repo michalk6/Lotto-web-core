@@ -65,16 +65,12 @@ public class WinnerUserIntegrationTest {
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("lotto.number-generator-base-url", wireMockServer::baseUrl);
-    }
-
-    @DynamicPropertySource
-    static void propertyOverride(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
     }
 
     @Test
     void winnerUserScenario() throws Exception {
-        // step 1: user POST six unique numbers (1,2,3,4,5,6) to endpoint and today is 2.02.2023 T 12:00 and system returned lotteryId "example"
+        // step 1: user POST six unique numbers (1,2,3,4,5,6) to endpoint and today is 16.02.2023 T 11:55 and system returned lotteryId "example"
         // given
         // when
         ResultActions inputNumbersRequest = mockMvc.perform(post("/inputNumbers")
@@ -88,7 +84,6 @@ public class WinnerUserIntegrationTest {
         // then
         MvcResult inputNumbersRequestResult = inputNumbersRequest.andExpect(status().isOk()).andReturn();
         String inputNumbersRequestResultJson = inputNumbersRequestResult.getResponse().getContentAsString();
-        System.out.println(inputNumbersRequestResultJson);
         InputNumbersDto result = objectMapper.readValue(inputNumbersRequestResultJson, InputNumbersDto.class);
         // step 2: user with id "example" tried to check result and system returned that draw didn't take place yet
         // given
@@ -101,11 +96,17 @@ public class WinnerUserIntegrationTest {
         String checkWinnerRequestResultJson = checkWinnerRequestResult.getResponse().getContentAsString();
         ResultDto resultDto = objectMapper.readValue(checkWinnerRequestResultJson, ResultDto.class);
         assertThat(resultDto.message()).isEqualTo("The draw has not yet taken place");
-        // step 3: two days passed 4.02.2023 T 11:55
+        // step 3: two days passed 18.02.2023 T 11:55
+        // given
+        // when
+        // then
         clock.plusDays(2);
-        // step 4: system generated winning numbers 1,2,3,4,5,6 for draw date 4.02.2023 T 11:55
+        // step 4: system generated winning numbers 1,2,3,4,5,6 for draw date 18.02.2023 T 12:00
+        // given
+        // when
+        // then
         wireMockServer.stubFor(
-                WireMock.get("/generateNumbers?amount=6&max=99")
+                WireMock.get("/generateNumbers?amount=6&max=99&drawDate=2023-02-18T12:00:00")
                         .willReturn(aResponse()
                                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                                 .withBody("""
@@ -116,13 +117,10 @@ public class WinnerUserIntegrationTest {
                                         """)
                                 .withStatus(200))
         );
-//        wireMockServer.start();
-//        configureFor("localhost", 8888);
-        // "/generateNumbers?amount=6&max=99"
-//        await().atMost(20, TimeUnit.SECONDS)
-//                .pollInterval(Duration.ofSeconds(1L))
-//                .until(() -> winningNumberGeneratorFacade.numbersAreAlreadyGeneratedForNextDrawDate());
         // step 5: system checked result for user with lotteryId "example"
+        // given
+        // when
+        // then
         await().atMost(20, TimeUnit.SECONDS)
                 .pollInterval(Duration.ofSeconds(1L))
                 .until(() -> resultCheckerFacade.ticketsAreCheckedForNextDrawDate());
