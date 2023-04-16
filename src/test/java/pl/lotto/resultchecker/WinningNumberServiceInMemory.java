@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @AllArgsConstructor
-class WinningNumberServiceInMemory implements WinningNumberService {
+public class WinningNumberServiceInMemory implements WinningNumberService {
     private LocalDateTime drawDate;
 
     @Override
